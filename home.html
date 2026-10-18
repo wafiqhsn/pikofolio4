@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home — Piko</title>
+    <style>
+      /* FONT: local Instrument Serif file used by the hero text. */
+      @font-face {
+        font-family: "Instrument Serif";
+        src: url("Fonts/InstrumentSerif-Regular.ttf") format("truetype");
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+      }
+
+      .home-viewport,
+      .home-viewport * {
+        box-sizing: border-box;
+      }
+
+      /* PAGE LAYOUT: background, centering, and outer spacing. */
+      .home-viewport {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 16vh 24px 8vh;
+        margin: 0;
+        background: #fff;
+        color: #111;
+        font-family: Helvetica, Arial, sans-serif;
+      }
+
+      /* HERO GROUP: spacing between the intro text and the image scene. */
+      .home-hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7.8vh;
+        width: 100%;
+        margin: auto 0;
+        text-align: center;
+      }
+
+      /* HERO TEXT: font size, line spacing, and maximum text width. */
+      .home-intro {
+        width: auto;
+        max-width: min(100%, 720px);
+        margin: 0;
+        font-family: "Instrument Serif", Georgia, serif;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 1.5;
+        letter-spacing: 0;
+      }
+
+      /* DESKTOP IMAGE SIZE: scales the whole scene with a maximum width. */
+      .home-scene {
+        position: relative;
+        width: min(80vw, 960px);
+        max-width: 100%;
+        margin: 0 auto;
+        isolation: isolate;
+      }
+
+      .home-scene { aspect-ratio: 1918 / 1046; }
+      /* FLOOR SHADOW: position, size, and 30% opacity. */
+      .home-shadow {
+        position: absolute;
+        left: 50%;
+        top: 92%;
+        width: 100%;
+        max-width: none;
+        height: auto;
+        transform: translate(-50%, -50%);
+        opacity: 0.3;
+        z-index: 0;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      /* All assets share one scale; mobile only changes their horizontal arrangement. */
+      /* OBJECT BOXES: x/y = position, w/h = size; percentages use the scene size. */
+      .home-object, .home-detail {
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        width: var(--w);
+        height: var(--h);
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        pointer-events: none;
+      }
+
+      .home-object-image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        user-select: none;
+      }
+
+      .home-detail { z-index: 20; }
+      .home-object:focus-visible, .home-detail:focus-visible {
+        outline: 1px dashed #ffce32;
+        outline-offset: 2px;
+      }
+
+
+
+      /* YELLOW LABELS: font, padding, color, and visibility. */
+      .home-tooltip {
+        position: absolute;
+        left: var(--label-x);
+        top: var(--label-y);
+        z-index: 30;
+        padding: 0.45em 0.65em;
+        border-radius: 0.45em;
+        background: #ECEEF2;
+        color: #080808;
+        font-size: 10px;
+        width: max-content;
+        font-weight: 400;
+        line-height: 1.05;
+        text-align: left;
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transform: translate(-50%, calc(-100% + 5px));
+        transition: opacity 140ms ease, transform 140ms ease, visibility 140ms;
+      }
+
+      /* LABEL POINTER: the small triangle below each yellow label. */
+      .home-tooltip::after {
+        content: "";
+        position: absolute;
+        top: calc(100% - 1px);
+        left: 50%;
+        width: 0;
+        height: 0;
+        border: 0.48em solid transparent;
+        border-bottom: 0;
+        border-top-color: #ECEEF2;
+        transform: translateX(-50%);
+      }
+
+      .home-tooltip.is-visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, -100%);
+      }
+
+      .home-scene, .home-scene * { cursor: default; }
+
+      /* PIKO BUBBLE: grows with the typed text; bottom-left corner stays square. */
+      .home-tooltip--speech {
+        border-bottom-left-radius: 0;
+        line-height: 1.15;
+        transform: translateY(calc(-100% + 5px));
+      }
+      .home-tooltip--speech.is-visible { transform: translateY(-100%); }
+      .home-speech-text {
+        display: block;
+        white-space: pre;
+      }
+
+      .home-tooltip--speech::after {
+        left: 0;
+        border-width: 0.8em;
+        border-left: 0;
+        transform: none;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .home-tooltip { transition: none; }
+      }
+
+      /* DESKTOP LABEL SIZE: applies from 1200px wide. */
+      @media (min-width: 1200px) {
+        .home-tooltip { font-size: 13px; }
+      }
+
+      /* Tablet: keep the full composition large without unlimited growth. */
+      @media (min-width: 768px) and (max-width: 1199px) {
+        .home-scene { width: min(92vw, 760px); }
+      }
+
+      /* MOBILE LAYOUT: text width, scene size, and object positions below 768px. */
+      @media (max-width: 767px) {
+        .home-viewport {
+          overflow-x: clip;
+          padding: 22vw 0 22vw;
+        }
+        .home-hero { gap: 16vw; }
+        .home-intro {
+          width: auto;
+          max-width: min(calc(100% - 48px), 360px);
+          font-size: 24px;
+          line-height: 1.5;
+        }
+        .home-scene {
+          width: min(100%, 480px);
+          aspect-ratio: 910 / 700;
+        }
+        .home-object, .home-detail {
+          left: var(--mobile-x);
+          top: var(--mobile-y);
+          width: var(--mobile-w);
+          height: var(--mobile-h);
+        }
+        .home-shadow { width: 145%; top: 93%; }
+          /* MOBILE OBJECT POSITIONS: keep all assets at the same relative scale. */
+        .home-object[data-object="person"] { --mobile-x:26.04396%; --mobile-y:0.00000%; --mobile-w:50.87912%; --mobile-h:95.52625%; }
+        .home-object[data-object="desk"] { --mobile-x:-18.83099%; --mobile-y:40.38705%; --mobile-w:137.66197%; --mobile-h:52.96265%; }
+        .home-object[data-object="lamp"] { --mobile-x:47.80220%; --mobile-y:3.99034%; --mobile-w:50.60008%; --mobile-h:38.93601%; }
+        #home-tip-lamp { left:73.10224%; top:calc(3.99034% - 8px); }
+        .home-object[data-object="projects"] { --mobile-x:9.89011%; --mobile-y:3.22988%; --mobile-w:29.11365%; --mobile-h:38.99647%; }
+        #home-tip-projects { left:24.44693%; top:calc(3.92988% - 8px); }
+        .home-object[data-object="reference"] { --mobile-x:-1.09890%; --mobile-y:37.36406%; --mobile-w:21.30040%; --mobile-h:5.68321%; }
+        #home-tip-reference { left:9.55130%; top:calc(37.36406% - 8px); }
+        .home-object[data-object="plant"] { --mobile-x:-8.24176%; --mobile-y:4.23218%; --mobile-w:28.64857%; --mobile-h:33.13189%; }
+        #home-tip-plant { left:6.08253%; top:calc(4.23218% - 8px); }
+        .home-object[data-object="apple"] { --mobile-x:10.98901%; --mobile-y:30.35074%; --mobile-w:5.20883%; --mobile-h:7.07378%; }
+        #home-tip-apple { left:13.59343%; top:calc(30.35074% - 8px); }
+        .home-object[data-object="spotify"] { --mobile-x:75.60440%; --mobile-y:18.25881%; --mobile-w:8.09229%; --mobile-h:24.66754%; }
+        #home-tip-spotify { left:79.65054%; top:calc(18.25881% - 8px); }
+        .home-object[data-object="contact"] { --mobile-x:61.53846%; --mobile-y:31.49948%; --mobile-w:20.55628%; --mobile-h:11.48733%; }
+        #home-tip-contact { left:71.81660%; top:calc(31.49948% - 8px); }
+        .home-object[data-object="clock"] { --mobile-x:82.19780%; --mobile-y:35.61073%; --mobile-w:11.11527%; --mobile-h:7.37608%; }
+        #home-tip-clock { left:87.75544%; top:calc(35.61073% - 8px); }
+        .home-object[data-object="coffee"] { --mobile-x:51.86813%; --mobile-y:35.73165%; --mobile-w:9.02244%; --mobile-h:7.37608%; }
+        #home-tip-coffee { left:56.37935%; top:calc(35.73165% - 8px); }
+        .home-detail[data-detail="watch"] { --mobile-x:47.69231%; --mobile-y:37.14286%; --mobile-w:2.85714%; --mobile-h:4.28571%; }
+        #home-tip-watch { left:49.12088%; top:calc(37.14286% - 8px); }
+        .home-detail[data-detail="shoes"] { --mobile-x:26.04396%; --mobile-y:71.42857%; --mobile-w:17.03297%; --mobile-h:24.00000%; }
+        #home-tip-shoes { left:34.56044%; top:calc(71.42857% - 8px); }
+        #home-tip-piko { left: 49%; top: 0; }
+      }
+      .home-entrance-pending .home-intro,
+      .home-entrance-pending .home-scene { opacity: 0; }
+    </style>
+  </head>
+  <body style="margin: 0">
+    <section class="home-viewport" aria-label="Introduction">
+      <div class="home-hero">
+        <!-- INTRO TEXT: edit the main sentence here. -->
+        <h1 class="home-intro">Hi! I’m Piko 👋🏻 a multidisciplinary designer 🖥️ based in Jakarta 🌲 I believe in form follows function and fun ✏️</h1>
+        <!-- HERO ASSETS: image files, desktop positions, and layer order. -->
+        <!-- LAYERS: shadow 0, desk 1, person 2, other objects above. -->
+        <!-- LABEL POSITIONS: label-x centers on the full image box, including transparency. -->
+        <div class="home-scene" aria-label="Explore the objects on Piko’s desk">
+          <img class="home-shadow" src="Images/HeroImages/Shadow.png" alt="" aria-hidden="true" width="1033" height="93" draggable="false" />
+          <div class="home-object" data-object="desk" style="--x:2.29406%; --y:39.59465%; --w:95.68300%; --h:51.92352%; z-index:1;"><img class="home-object-image" src="Images/HeroImages/Desk.png" alt="Desk" width="2960" height="876" fetchpriority="high" draggable="false" /></div>
+          <button class="home-object" data-object="lamp" type="button" aria-label="Lamp" aria-describedby="home-tip-lamp" style="--x:56.51721%; --y:3.91205%; --w:35.16997%; --h:38.17208%; z-index:3;"><img class="home-object-image" src="Images/HeroImages/Lamp.png" alt="" width="1088" height="644" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-lamp" role="tooltip" style="--label-x:74.10219%; --label-y:calc(3.91205% - 8px);">LAMP</span>
+          <button class="home-object" data-object="projects" type="button" aria-label="Projects" aria-describedby="home-tip-projects" style="--x:18.51825%; --y:3.25277%; --w:20.23566%; --h:38.23136%; z-index:4;"><img class="home-object-image" src="Images/HeroImages/Computer.png" alt="" width="626" height="645" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-projects" role="tooltip" style="--label-x:27.63608%; --label-y:calc(3.85277% - 8px);">PROJECTS</span>
+          <button type="button" aria-label="Hi I’m Piko, let’s collaborate!" aria-describedby="home-tip-piko" class="home-object" data-object="person" style="--x:33.36809%; --y:0.00000%; --w:35.36392%; --h:93.65201%; z-index:2;"><img class="home-object-image" src="Images/HeroImages/Person.png" alt="Person" width="1094" height="1580" fetchpriority="high" draggable="false" /></button>
+          <button class="home-object" data-object="reference" type="button" aria-label="Reference" aria-describedby="home-tip-reference" style="--x:7.29927%; --y:36.63098%; --w:14.80501%; --h:5.57170%; z-index:5;"><img class="home-object-image" src="Images/HeroImages/Book.png" alt="" width="458" height="94" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-reference" role="tooltip" style="--label-x:14.70177%; --label-y:calc(36.63098% - 8px);">REFERENCE</span>
+          <button class="home-object" data-object="plant" type="button" aria-label="Asparagus" aria-describedby="home-tip-plant" style="--x:2.91971%; --y:4.14914%; --w:19.91241%; --h:32.48184%; z-index:6;"><img class="home-object-image" src="Images/HeroImages/Plant.png" alt="" width="616" height="548" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-plant" role="tooltip" style="--label-x:12.87591%; --label-y:calc(4.14914% - 8px);">ASPARAGUS</span>
+          <button class="home-object" data-object="apple" type="button" aria-label="Apple" aria-describedby="home-tip-apple" style="--x:15.22419%; --y:29.75526%; --w:3.62044%; --h:6.93499%; z-index:7;"><img class="home-object-image" src="Images/HeroImages/Apple.png" alt="" width="112" height="117" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-apple" role="tooltip" style="--label-x:17.03441%; --label-y:calc(29.75526% - 8px);">APPLE</span>
+          <button class="home-object" data-object="spotify" type="button" aria-label="Spotify" aria-describedby="home-tip-spotify" style="--x:80.08342%; --y:17.90057%; --w:5.62461%; --h:24.18356%; z-index:8;"><img class="home-object-image" src="Images/HeroImages/Speaker.png" alt="" width="174" height="408" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-spotify" role="tooltip" style="--label-x:82.89572%; --label-y:calc(17.90057% - 8px);">SPOTIFY</span>
+          <button class="home-object" data-object="contact" type="button" aria-label="Contact" aria-describedby="home-tip-contact" style="--x:69.65589%; --y:30.88145%; --w:14.28780%; --h:11.26195%; z-index:9;"><img class="home-object-image" src="Images/HeroImages/Telephone.png" alt="" width="442" height="190" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-contact" role="tooltip" style="--label-x:76.79979%; --label-y:calc(30.88145% - 8px);">CONTACT</span>
+          <button class="home-object" data-object="clock" type="button" aria-label="Clock" aria-describedby="home-tip-clock" style="--x:84.67153%; --y:34.91205%; --w:7.72576%; --h:7.23136%; z-index:10;"><img class="home-object-image" src="Images/HeroImages/clock.png" alt="" width="239" height="122" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-clock" role="tooltip" style="--label-x:88.53441%; --label-y:calc(34.91205% - 8px);">CLOCK</span>
+          <button class="home-object" data-object="coffee" type="button" aria-label="Americano" aria-describedby="home-tip-coffee" style="--x:56.51721%; --y:35.03059%; --w:6.27112%; --h:7.23136%; z-index:11;"><img class="home-object-image" src="Images/HeroImages/Coffee.png" alt="" width="194" height="122" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-coffee" role="tooltip" style="--label-x:59.65277%; --label-y:calc(35.03059% - 8px);">AMERICANO</span>
+          <!-- PERSON DETAILS: separate hover areas for the watch and shoes. -->
+          <button class="home-detail" type="button" data-detail="watch" aria-label="Casio" aria-describedby="home-tip-watch" style="--x:50%; --y:41%; --w:3%; --h:4%;"></button>
+          <span class="home-tooltip" id="home-tip-watch" role="tooltip" style="--label-x:51.5%; --label-y:40%;">CASIO</span>
+          <button class="home-detail" type="button" data-detail="shoes" aria-label="Chuck 70’s" aria-describedby="home-tip-shoes" style="--x:34%; --y:73%; --w:14%; --h:21%;"></button>
+          <span class="home-tooltip" id="home-tip-shoes" role="tooltip" style="--label-x:41%; --label-y:72%;">CHUCK 70’S</span>
+          <span class="home-tooltip home-tooltip--speech" id="home-tip-piko" role="note" aria-label="Hi I’m Piko, let’s collaborate!" style="--label-x:51%; --label-y:0%;"><span class="home-speech-text" aria-hidden="true"></span></span>
+        </div>
+      </div>
+    </section>
+    <script>
+      (() => {
+        const scene = document.querySelector('.home-scene');
+        if (!scene) return;
+        const hero = scene.closest('.home-hero');
+        const intro = hero.querySelector('.home-intro');
+        const entranceAnimations = new Set();
+        hero.classList.add('home-entrance-pending');
+        let entranceStarted = false;
+        // ENTRANCE ANIMATION: hero scale/fade and intro text movement.
+        const animateEntrance = () => {
+          if (entranceStarted || controller.signal.aborted) return;
+          entranceStarted = true;
+          hero.classList.remove('home-entrance-pending');
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          const play = (element, frames, timing) => {
+            const animation = element.animate(frames, {
+              easing: 'cubic-bezier(0, 0, 0, 1)', fill: 'both', ...timing,
+            });
+            entranceAnimations.add(animation);
+            animation.finished.then(() => {
+              animation.cancel();
+              entranceAnimations.delete(animation);
+            }).catch(() => {});
+          };
+          // HERO TIMING: duration and delay values are in milliseconds.
+          play(scene, [
+            { opacity: 0, transform: 'scale(0.94)' },
+            { opacity: 1, transform: 'scale(1)' },
+          ], { duration: 2000 });
+          // TEXT TIMING: delay controls when the intro appears after the hero.
+          play(intro, [
+            { opacity: 0, transform: 'translateY(18px)' },
+            { opacity: 1, transform: 'translateY(0)' },
+          ], { duration: 2000 });
+        };
+        const controller = new AbortController();
+        const options = { signal: controller.signal };
+        let active = null;
+        let pointerTarget = null;
+        // LABEL CONTROL: show one object label; handle the Piko bubble separately.
+        const show = (button) => {
+          if (button?.dataset.object === 'person') {
+            if (automaticFinished) startSpeech();
+            button = null;
+          }
+          if (active) document.getElementById(active.getAttribute('aria-describedby'))?.classList.remove('is-visible');
+          active = button;
+          if (active) document.getElementById(active.getAttribute('aria-describedby'))?.classList.add('is-visible');
+        };
+        const objects = [...scene.querySelectorAll('.home-object')].sort((a, b) => Number(a.style.zIndex) - Number(b.style.zIndex));
+        const details = [...scene.querySelectorAll('.home-detail')];
+        const masks = new Map();
+        // Test the PNG alpha channel so empty pixels never trigger a label.
+        const hitAt = (event) => {
+          for (const object of [...objects].reverse()) {
+            const mask = masks.get(object);
+            if (!mask) continue;
+            const rect = object.getBoundingClientRect();
+            const x = Math.floor((event.clientX - rect.left) / rect.width * mask.width);
+            const y = Math.floor((event.clientY - rect.top) / rect.height * mask.height);
+            if (x < 0 || y < 0 || x >= mask.width || y >= mask.height || mask.data[(y * mask.width + x) * 4 + 3] < 40) continue;
+            if (object.dataset.object === 'person') {
+              return details.find((detail) => {
+                const area = detail.getBoundingClientRect();
+                return event.clientX >= area.left && event.clientX <= area.right && event.clientY >= area.top && event.clientY <= area.bottom;
+              }) || object;
+            }
+            return object.matches('button') ? object : null;
+          }
+          return null;
+        };
+        // INTERACTION: mouse hover, touch taps, and keyboard focus.
+        scene.addEventListener('pointermove', (event) => {
+          if (event.pointerType !== 'touch') {
+            const target = hitAt(event);
+            if (target !== pointerTarget) {
+              pointerTarget = target;
+              show(target);
+            }
+          }
+        }, options);
+        scene.addEventListener('pointerleave', (event) => {
+          if (event.pointerType !== 'touch') { pointerTarget = null; show(null); }
+        }, options);
+        scene.addEventListener('pointerup', (event) => {
+          if (event.pointerType === 'touch') {
+            const target = hitAt(event);
+            show(active === target ? null : target);
+          }
+        }, options);
+        scene.querySelectorAll('button').forEach((button) => {
+          button.addEventListener('focus', () => show(button), options);
+          button.addEventListener('blur', () => { if (active === button) show(null); }, options);
+          button.addEventListener('click', (event) => {
+            if (event.detail === 0) show(active === button ? null : button);
+          }, options);
+        });
+        document.addEventListener('pointerdown', (event) => {
+          if (!scene.contains(event.target)) show(null);
+        }, options);
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') show(null);
+        }, options);
+        const content = document.getElementById('content');
+        const photos = [...scene.querySelectorAll('.home-object-image')];
+        const speech = scene.querySelector('#home-tip-piko');
+        const typed = speech.querySelector('.home-speech-text');
+        // PIKO MESSAGE: \n starts a new line in the bubble.
+        const message = 'HI I’M PIKO, LET’S\nCOLLABORATE!';
+        let delayTimer;
+        let typingTimer;
+        let speechBusy = false;
+        let automaticFinished = false;
+        // TYPEWRITER: finish typing, hold for 3 seconds, then hide without looping.
+        const startSpeech = () => {
+          if (controller.signal.aborted || speechBusy) return;
+          speechBusy = true;
+          typed.textContent = '';
+          speech.classList.add('is-visible');
+          const holdSpeech = () => {
+            typingTimer = setTimeout(() => {
+              if (controller.signal.aborted) return;
+              speech.classList.remove('is-visible');
+              speechBusy = false;
+              automaticFinished = true;
+            }, 3000);
+          };
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            typed.textContent = message;
+            holdSpeech();
+            return;
+          }
+          let index = 0;
+          const typeNext = () => {
+            if (controller.signal.aborted) return;
+            typed.textContent = message.slice(0, ++index);
+            if (index < message.length) typingTimer = setTimeout(typeNext, 120);
+            else holdSpeech();
+          };
+          typeNext();
+        };
+        const waitFor = (target, event) => new Promise((resolve) => {
+          target.addEventListener(event, resolve, { once: true, signal: controller.signal });
+        });
+        // LOADING: wait for the page reveal and decoded images before starting.
+        const pageReady = content
+          ? waitFor(content, 'pagereveal')
+          : document.readyState === 'complete' ? Promise.resolve() : waitFor(window, 'load');
+        const imageReady = Promise.all(photos.map(async (photo) => {
+          if (photo.decode) await photo.decode().catch(() => {});
+          else if (!photo.complete) await Promise.race([waitFor(photo, 'load'), waitFor(photo, 'error')]);
+          if (controller.signal.aborted || !photo.naturalWidth) return;
+          const canvas = document.createElement('canvas');
+          canvas.width = photo.naturalWidth;
+          canvas.height = photo.naturalHeight;
+          const context = canvas.getContext('2d', { willReadFrequently: true });
+          context.drawImage(photo, 0, 0);
+          masks.set(photo.parentElement, context.getImageData(0, 0, canvas.width, canvas.height));
+        }));
+        // AUTO GREETING: show once, 2 seconds after the page and images are ready.
+        Promise.all([pageReady, imageReady]).then(() => {
+          if (controller.signal.aborted) return;
+          animateEntrance();
+          if (photos.some((photo) => !photo.naturalWidth)) return;
+          delayTimer = setTimeout(startSpeech, 1000);
+        });
+        // CLEANUP: stop timers and animations when leaving Home.
+        content?.addEventListener('pageleave', () => {
+          entranceAnimations.forEach((animation) => animation.cancel());
+          clearTimeout(delayTimer);
+          clearTimeout(typingTimer);
+          controller.abort();
+        }, { once: true });
+      })();
+    </script>
+  </body>
+</html>

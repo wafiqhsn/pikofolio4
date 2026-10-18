@@ -1,0 +1,256 @@
+<style>
+  /* PROJECT TITLES: Instrument Serif font and desktop text size. */
+  #work .project-title {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: #000;
+  }
+  /* MOBILE TITLES: smaller text on narrow screens. */
+  @media (max-width: 767px) {
+    #work .project-title { font-size: 18px; }
+  }
+</style>
+<!-- PROJECT GRID: page spacing and responsive column layout. -->
+<section id="work" class="max-w-6xl mx-auto px-8 pt-24 pb-16 sm:pt-16 lg:pt-32">
+  <div id="project-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+</section>
+
+<script>
+  // Keep variables local when reopening this tab.
+  (() => {
+    // PROJECT DATA: edit or add projects here.
+    const projects = [
+      {
+        title: "Loan Market",
+        image: "Projects/LM.png",
+        link: "https://www.behance.net/gallery/248730305/Loan-Market",
+        color: "#E7E9ED",
+        year: "2025",
+      },
+      {
+        title: "Vidio",
+        image: "Projects/Vidio.png",
+        link: "https://www.behance.net/gallery/237299153/Vidio-Social-Media-Content",
+        color: "#E7E9ED",
+        year: "2024",
+      },
+      {
+        title: "Jagocpns",
+        image: "Projects/Jagocpns.png",
+        link: "https://www.behance.net/gallery/237297073/Jagocpns",
+        color: "#E7E9ED",
+        year: "2025",
+      },
+      {
+        title: "Kirimaja",
+        image: "Projects/Kirimaja.png",
+        link: "https://www.behance.net/gallery/237288371/Kirimaja-Branding",
+        color: "#E7E9ED",
+        year: "2024",
+      },
+      {
+        title: "Gikslab",
+        image: "Projects/Gikslab.png",
+        link: "https://www.behance.net/gallery/182622713/Gikslab-Indonesia",
+        color: "#E7E9ED",
+        year: "2023",
+      },
+      {
+        title: "BEM Unpad",
+        image: "Projects/KJ.png",
+        link: "https://www.behance.net/gallery/177106157/BEM-Unpad-2023-Kunci-Jawaban",
+        color: "#E7E9ED",
+        year: "2023",
+      },
+      {
+        title: "Prabu Unpad",
+        image: "Projects/Prabu.png",
+        link: "https://www.behance.net/gallery/177036489/Prabu-Unpad-2022",
+        color: "#E7E9ED",
+        year: "2022",
+      },
+      {
+        title: "Smansaku Campus Expo",
+        image: "Projects/SCE.png",
+        link: "https://www.behance.net/gallery/163697683/Smansaku-Campus-Expo-2022",
+        color: "#E7E9ED",
+        year: "2022",
+      },
+    ];
+
+    // CARD TEMPLATE: shared layout for every project.
+    function createProjectCard(project) {
+      // Folder shape: 300 x 177.6, with a 20-unit corner radius.
+      const folderPath = `
+        M 20 0
+        H 127
+        Q 135 0 141 6
+        L 162 27
+        Q 169 34 179 34
+        H 280
+        A 20 20 0 0 1 300 54
+        V 157.6
+        A 20 20 0 0 1 280 177.6
+        H 20
+        A 20 20 0 0 1 0 157.6
+        V 20
+        A 20 20 0 0 1 20 0
+        Z
+      `;
+
+      // Escape SVG closing tags to avoid Live Server injection here.
+      const folderMask = `url(&quot;data:image/svg+xml,${encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 300 177.6"
+             preserveAspectRatio="none">
+          <path d="${folderPath}" fill="white"/>
+        <\/svg>
+      `)}&quot;)`;
+
+      return `
+        <a
+          href="${project.link}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group flex flex-col cursor-pointer [container-type:inline-size]"
+        >
+          <div class="relative w-full aspect-[5/4]">
+            <!-- FOLDER BACKGROUND: uses the color set in each project above. -->
+            <div
+              class="absolute inset-x-0 bottom-0 h-[90%] rounded-[6.67cqw]"
+              style="background-color: ${project.color};"
+            ></div>
+
+            <!-- PROJECT IMAGE: moves up when the folder is hovered. -->
+            <div
+              class="absolute left-[6.67cqw] right-[6.67cqw] top-0
+                     aspect-[5/4] overflow-hidden
+                     transition-transform duration-300 group-hover:-translate-y-[5cqw]
+"
+            >
+              <img
+                src="${project.image}"
+                alt="${project.title}"
+                loading="eager"
+                class="w-full h-full object-cover"
+              >
+            </div>
+
+            <div
+              class="absolute left-0 bottom-0 w-full h-[74%]
+                     z-20 origin-bottom transition-transform duration-300 group-hover:scale-y-50"
+            >
+              <!-- Glass layer clipped to the folder shape -->
+              <div
+                class="absolute inset-0 bg-white/40 backdrop-blur-[5cqw]"
+                style="
+                  -webkit-mask-image: ${folderMask};
+                  mask-image: ${folderMask};
+                  -webkit-mask-size: 100% 100%;
+                  mask-size: 100% 100%;
+                  -webkit-mask-repeat: no-repeat;
+                  mask-repeat: no-repeat;
+                "
+              ></div>
+
+              <!-- Gradient border around the folder -->
+              <svg
+                class="absolute inset-0 w-full h-full pointer-events-none"
+                viewBox="0 0 300 177.6"
+                preserveAspectRatio="none"
+                fill="none"
+                aria-hidden="true"
+                style="
+                  -webkit-mask-image: ${folderMask};
+                  mask-image: ${folderMask};
+                  -webkit-mask-size: 100% 100%;
+                  mask-size: 100% 100%;
+                  -webkit-mask-repeat: no-repeat;
+                  mask-repeat: no-repeat;
+                "
+              >
+                <defs>
+                  <linearGradient
+                    id="border-${projects.indexOf(project)}"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="177.6"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop offset="0%" stop-color="white" stop-opacity="0.5" />
+                    <stop offset="50%" stop-color="white" stop-opacity="0.5" />
+                    <stop offset="100%" stop-color="white" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+
+                <path
+                  d="${folderPath}"
+                  stroke="url(#border-${projects.indexOf(project)})"
+                  stroke-width="5"
+                />
+              <\/svg>
+
+              <span
+                class="absolute left-[6.67cqw] bottom-[6.67cqw]
+                       text-[clamp(12px,7.5cqw,18px)] leading-normal text-white"
+              >
+                Archive
+              </span>
+            </div>
+          </div>
+
+          <!-- PROJECT CAPTION: title and year below the folder. -->
+          <div class="mt-[5cqw] text-center">
+            <h3 class="project-title">
+              ${project.title}
+            </h3>
+            <p class="mt-1 text-[clamp(12px,5.83cqw,14px)] leading-normal text-gray-500">
+              ${project.year}
+            </p>
+          </div>
+        </a>
+      `;
+    }
+
+    // Render all project cards.
+    const grid = document.getElementById("project-grid");
+    grid.innerHTML = projects.map(createProjectCard).join("");
+
+    // Shuffle animation timing only; keep the project layout unchanged.
+    function animateProjectCards() {
+      if (!grid.isConnected || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const cards = Array.from(grid.children);
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+      }
+      cards.forEach((card, order) => {
+        // Smooth upward entrance with randomized start times.
+        const animation = card.animate([
+          { opacity: 0, translate: "0 32px" },
+          { opacity: 1, translate: "0 0" },
+        ], {
+          duration: 1000,
+          delay: order * 35,
+          easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+          fill: "both",
+        });
+        animation.finished.then(() => animation.cancel(), () => {});
+      });
+    }
+
+    // Start when the page is visible, after layout and image preparation.
+    const pageContainer = grid.closest("#content");
+    if (pageContainer) {
+      pageContainer.addEventListener("pagereveal", animateProjectCards, { once: true });
+      pageContainer.addEventListener("pageleave", () => {
+        pageContainer.removeEventListener("pagereveal", animateProjectCards);
+      }, { once: true });
+    } else {
+      requestAnimationFrame(animateProjectCards);
+    }
+  })();
+</script>

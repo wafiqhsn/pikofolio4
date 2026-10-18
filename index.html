@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary SEO -->
+    <title>Wafiq's Portfolio</title>
+    <meta name="title" content="Wafiq's Digital Space" />
+    <meta
+      name="description"
+      content="A personal portfolio filled with selected works, visuals, and interactive explorations crafted with a minimalist and thoughtful approach ✦"
+    />
+    <meta
+      name="keywords"
+      content="Wafiq Hasan, Piko, portfolio, multidisciplinary designer, UI/UX designer, motion graphic designer"
+    />
+    <meta name="author" content="Wafiq Hasan" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Open Graph / WhatsApp / Discord / LinkedIn -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://wafiqhsn.github.io/" />
+    <meta property="og:title" content="Wafiq's Portfolio" />
+    <meta
+      property="og:description"
+      content="A personal portfolio filled with selected works, visuals, and interactive explorations crafted with a minimalist and thoughtful approach ✦"
+    />
+    <meta property="og:image" content="https://wafiqhsn.github.io/og-cover.jpg" />
+    <meta property="og:image" content="https://username.github.io/og-cover.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Wafiq Creative Designer Portfolio Preview" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://wafiqhsn.github.io/" />
+    <meta name="twitter:title" content="Wafiq's Portfolio" />
+    <meta
+      name="twitter:description"
+      content="A personal portfolio filled with selected works, visuals, and interactive explorations crafted with a minimalist and thoughtful approach ✦"
+    />
+    <meta name="twitter:image" content="https://wafiqhsn.github.io/og-cover.jpg" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <!-- Preferred URL for search engines -->
+    <link rel="canonical" href="https://wafiqhsn.github.io/" />
+
+    <link rel="preload" href="Fonts/InstrumentSerif-Regular.ttf" as="font" type="font/ttf" crossorigin />
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Helvetica", "Arial", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Analytics -->
+    <script
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="64492d38-7c41-44dc-9e79-0e0851238919"
+    ></script>
+
+    <style>
+      @font-face {
+        font-family: "Instrument Serif";
+        src: url("Fonts/InstrumentSerif-Regular.ttf") format("truetype");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+      }
+
+      /* Legacy base styles; page utilities override some rules. */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* NAVIGATION: spacing, position, font size, and active tab color. */
+      #navbar {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+      }
+      #navbar nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        background: transparent;
+      }
+      #navbar .nav-link {
+        font-family: "Instrument Serif", Georgia, serif;
+        font-size: 24px;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 1.15;
+        text-decoration: none;
+        color: #ccc;
+        transition: none;
+      }
+      #navbar .nav-link[aria-current="page"] { color: #000; }
+      #navbar .nav-link:hover { color: #000; }
+      #navbar .nav-link:focus-visible {
+        outline: 1px solid currentColor;
+        outline-offset: 5px;
+      }
+      @media (max-width: 767px) {
+        #navbar { top: 16px; }
+        #navbar nav { gap: 16px; }
+        #navbar .nav-link { font-size: 22px; }
+      }
+
+      .page {
+        max-width: 1000px;
+        margin: auto;
+        padding: 60px;
+      }
+
+      .fade-out {
+        opacity: 0;
+        transition: 0.15s;
+      }
+      /* HEADER CORNERS: home logo and three-dot download menu. */
+      .header-logo, .header-more {
+        position: fixed;
+        top: 10px;
+        z-index: 10000;
+      }
+      .header-logo {
+        left: 20px;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .header-logo img { display: block; width: 32px; height: auto; }
+      .header-more { right: 20px; }
+      .header-more-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #000;
+        cursor: pointer;
+      }
+      /* DOWNLOAD MENU: dropdown box and link styles. */
+      .header-downloads {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        min-width: 190px;
+        padding: 6px;
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 6px 20px rgb(0 0 0 / 8%);
+      }
+      .header-downloads[hidden] { display: none; }
+      .header-downloads a {
+        display: block;
+        padding: 11px 12px;
+        border-radius: 5px;
+        color: #111;
+        font: 14px/1.3 Helvetica, Arial, sans-serif;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .header-downloads a:hover { background: #f1f1f1; }
+      .header-logo:focus-visible, .header-more-button:focus-visible,
+      .header-downloads a:focus-visible { outline: 2px solid #777; outline-offset: 2px; }
+      @media (max-width: 767px) {
+        .header-logo, .header-more { top: 5px; }
+        .header-logo { left: 8px; }
+        .header-more { right: 8px; }
+        .header-logo img { width: 28px; }
+      }
+      /* COPYRIGHT: stays at the bottom on every page, outside page animations. */
+      .site-copyright {
+        position: fixed;
+        bottom: 18px;
+        left: 0;
+        width: 100%;
+        margin: 0;
+        z-index: 9000;
+        color: #8a8a8a;
+        font: 14px/1.4 Helvetica, Arial, sans-serif;
+        text-align: center;
+        pointer-events: none;
+        animation: none;
+        transition: none;
+      }
+      /* HELLO LOADER: stays visible until the drawing and first-page images finish. */
+      body.site-loading { overflow: hidden; }
+      body.site-loading > #navbar,
+      body.site-loading > .header-logo,
+      body.site-loading > .header-more,
+      body.site-loading > .site-copyright { visibility: hidden; }
+      .hello-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 20000;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+      }
+      /* HELLO SIZE: adjust desktop and mobile widths separately. */
+      .hello-loader svg {
+        width: 180px;
+        max-width: 80vw;
+        height: auto;
+        overflow: visible;
+      }
+      @media (max-width: 767px) {
+        .hello-loader svg { width: 100px; }
+      }
+      .hello-loader path {
+        fill: none;
+        stroke: #000;
+        stroke-width: 15;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+      }
+      .hello-error { text-align: center; font: 14px/1.5 Helvetica, Arial, sans-serif; }
+      .hello-error[hidden] { display: none; }
+      .hello-error button { margin-top: 10px; padding: 8px 16px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; }
+    </style>
+  </head>
+
+  <body class="bg-white text-black site-loading">
+    <!-- HELLO ARTWORK: path copied from Images/hello.svg for the drawing animation. -->
+    <div id="helloLoader" class="hello-loader" role="status" aria-label="Loading portfolio">
+      <svg viewBox="0 0 727.38 238.56" aria-hidden="true">
+        <path id="helloPath" pathLength="1" d="M7.5,217.9c43.88-23.18,73.1-50.2,90.53-68.92,20.08-21.56,47.86-52.17,52.39-94.53.88-8.23,4.01-37.51-9.81-45.11-5.75-3.16-12.41-1.46-14.41-.84-20.48,6.29-26.53,44.18-35.45,104.71-7.1,48.21-12.58,87.39-16.15,113.41.48-7.09,4.72-62.04,32.44-87.9,6.69-6.24,19.35-18.06,35.34-16.67,1.65.14,6,.52,9.39,2.36,21.86,11.86-9.64,77.38,11.21,96.87,24.67,23.06,121.25-19.51,125.69-64.55.25-2.58,2.71-27.47-11.33-36.64-5.03-3.28-10.29-3.33-11.66-3.3-18.18.35-37.7,26.3-38.57,49.78-.96,26.01,20.83,52.88,45.3,60.1,52.02,15.35,123.02-56.09,145.3-124.23,8.78-26.85,18.4-78.86-.37-89.83-4.95-2.89-10.37-2.06-12.51-1.73-28.64,4.4-44.6,59.83-49.44,91.76-6.19,40.85-4.47,111.1,30.06,125.23,2.1.86,8.29,3.14,20.62,1.84,73.84-7.75,115.92-117.17,118.84-125.04,3.57-9.61,27.23-73.34,6.37-88.56-5.98-4.36-13.55-3.23-14.94-3.02-27.88,4.2-42.1,60.52-46.14,90.68-5.1,38.08-4,109.34,32.1,124.43,10.16,4.25,19.84,2.69,24.42,1.89,41.89-7.27,57.34-62.9,57.99-65.38.54-1.87,11.34-37.44,41.31-43.39,3.64-.72,13.44-2.53,23.39,2.19,20.64,9.78,27.38,40.76,21.26,63.68-5.05,18.92-20.37,37.97-41.35,42.49-4.28.92-13.29,2.86-22.63-1.18-20.57-8.89-27.9-40.37-21.97-63.79,5.1-20.14,21.59-40.5,41.31-43.39,10.17-1.49,21.4,1.63,23.39,2.19,13.31,3.7,14.25,8.59,25.02,10.42,14.59,2.49,26.7-4.13,29.92-6.03,8.4-4.96,13.23-11.44,15.56-15.07" />
+      </svg>
+      <div id="helloError" class="hello-error" hidden>
+        <p>Couldn’t load the page. Please try again.</p>
+        <button type="button" id="helloRetry">Try again</button>
+      </div>
+    </div>
+    <!-- HOME LOGO: change the logo image here. -->
+    <a class="header-logo" id="homeLogo" href="#" aria-label="Go to Home">
+      <img src="Images/Logo.svg" alt="" width="42" height="34" />
+    </a>
+    <!-- DOWNLOAD LINKS: update the CV and portfolio URLs here. -->
+    <div class="header-more" id="headerMore">
+      <button class="header-more-button" id="headerMoreButton" type="button" aria-label="Download options" aria-expanded="false" aria-controls="headerDownloads">
+        <svg width="20" height="6.4" viewBox="0 0 25 8" fill="currentColor" aria-hidden="true">
+          <circle cx="3" cy="4" r="2" /><circle cx="12.5" cy="4" r="2" /><circle cx="22" cy="4" r="2" />
+        </svg>
+      </button>
+      <div class="header-downloads" id="headerDownloads" hidden>
+        <a href="https://drive.google.com/file/d/1ptUa8NC2_C57vPdolugWmaEgKEF1b3-g/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Download Resume</a>
+        <a href="https://drive.google.com/file/d/1llZMCI6Dl_-RVUQu9ySJ4RSdKSjKFMhu/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Download Portfolio</a>
+      </div>
+    </div>
+    <!-- NAVIGATION LINKS: Home, Work, and About. -->
+    <div id="navbar">
+      <nav aria-label="Main navigation">
+        <a href="#" data-page="home.html" class="nav-link" aria-current="page">Home</a>
+        <a href="#" data-page="work.html" class="nav-link">Work</a>
+        <a href="#" data-page="about.html" class="nav-link">About</a>
+      </nav>
+    </div>
+
+    <!-- Active page content -->
+
+    <main id="content" class="min-h-screen"></main>
+    <footer class="site-copyright">©2026 Wafiq Hasan</footer>
+
+    <script>
+      const content = document.getElementById("content");
+
+      const navLinks = document.querySelectorAll(".nav-link");
+
+      // HELLO DRAWING: plays once per site opening; normal tab changes skip it.
+      const helloLoader = document.getElementById('helloLoader');
+      const helloPath = document.getElementById('helloPath');
+      let firstPagePending = true;
+      content.inert = true;
+      const helloFinished = (() => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          helloPath.style.strokeDashoffset = '0';
+          return Promise.resolve();
+        }
+        const drawing = helloPath.animate([
+          { strokeDashoffset: '1' }, { strokeDashoffset: '0' },
+        ], { duration: 1500, easing: 'ease-in-out', fill: 'forwards' });
+        return drawing.finished.then(() => {
+          helloPath.style.strokeDashoffset = '0';
+          drawing.cancel();
+          // Hold the completed Hello for 500 ms before revealing Home.
+          return new Promise((resolve) => setTimeout(resolve, 100));
+        });
+      })();
+
+      // FIRST LOAD: no short image timeout; keep Hello until images are decoded.
+      async function finishFirstLoad() {
+        const imageReady = Array.from(document.images).map(async (img) => {
+          if (!img.getAttribute('src')) return;
+          if (!img.complete) await new Promise((resolve) => {
+            const finish = () => {
+              img.removeEventListener('load', finish);
+              img.removeEventListener('error', finish);
+              resolve();
+            };
+            img.addEventListener('load', finish, { once: true });
+            img.addEventListener('error', finish, { once: true });
+            if (img.complete) finish();
+          });
+          if (img.decode && img.naturalWidth) await img.decode().catch(() => {});
+        });
+        await Promise.all([helloFinished, ...imageReady, document.fonts.ready]);
+        // HELLO EXIT: softly fade the lettering before revealing Home.
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          await helloLoader.querySelector('svg').animate(
+            [{ opacity: 1 }, { opacity: 0 }],
+            { duration: 600, easing: 'ease-in-out', fill: 'forwards' }
+          ).finished;
+        }
+        firstPagePending = false;
+        content.inert = false;
+        document.body.classList.remove('site-loading');
+        helloLoader.remove();
+      }
+      document.getElementById('helloRetry').addEventListener('click', () => {
+        document.getElementById('helloError').hidden = true;
+        loadPage('home.html');
+      });
+
+      // Run scripts from the loaded page.
+      function runScripts(container) {
+        container.querySelectorAll("script").forEach((oldScript) => {
+          const newScript = document.createElement("script");
+          newScript.textContent = oldScript.textContent;
+          document.body.appendChild(newScript);
+          document.body.removeChild(newScript);
+        });
+      }
+
+      // PAGE ORDER: controls the order used by scrolling and swiping.
+      const tabOrder = ["home.html", "work.html", "about.html"];
+      const desktopScroll = window.matchMedia(
+        "(min-width: 1024px) and (hover: hover) and (pointer: fine)",
+      );
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      let currentPage = null;
+      let changingPage = false;
+      let queuedPage = null;
+      let destinationPage = null;
+      let wheelTotal = 0;
+      let lastWheelTime = 0;
+      let wheelBlockedUntil = 0;
+
+      // Avoid hiding a page indefinitely for slow or lazy-loaded images.
+      function waitForImages(container) {
+        return Promise.all(
+          Array.from(container.querySelectorAll("img"))
+            .filter((img) => !img.complete && img.loading !== "lazy" && img.getAttribute("src"))
+            .map(
+              (img) =>
+                new Promise((resolve) => {
+                  const finish = () => {
+                    clearTimeout(timeout);
+                    img.removeEventListener("load", finish);
+                    img.removeEventListener("error", finish);
+                    resolve();
+                  };
+                  const timeout = setTimeout(finish, 1500);
+                  img.addEventListener("load", finish, { once: true });
+                  img.addEventListener("error", finish, { once: true });
+                  if (img.complete) finish();
+                }),
+            ),
+        );
+      }
+
+      // Let dynamically generated styles and layout settle before revealing a page.
+      function settlePageLayout() {
+        return new Promise((resolve) => {
+          requestAnimationFrame(() => requestAnimationFrame(resolve));
+        });
+      }
+
+      // Move content up when advancing and down when returning.
+      async function animatePage(entering, direction) {
+        if (reducedMotion.matches || (entering && currentPage === "home.html")) return;
+        const distance = desktopScroll.matches ? 72 : 28;
+        const hidden = {
+          opacity: 0,
+          transform: `translateY(${(entering ? direction : -direction) * distance}px)`,
+        };
+        const visible = { opacity: 1, transform: "translateY(0)" };
+        const animation = content.animate(entering ? [hidden, visible] : [visible, hidden], {
+          duration: entering ? 480 : 220,
+          easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+          fill: "both",
+        });
+        try {
+          await animation.finished;
+        } finally {
+          if (!entering) content.style.opacity = "0";
+          animation.cancel();
+        }
+      }
+
+      // ACTIVE TAB: update immediately, even while the next page is loading.
+      function updateActiveTab(page) {
+        navLinks.forEach((link) => {
+          if (link.dataset.page === page) link.setAttribute("aria-current", "page");
+          else link.removeAttribute("aria-current");
+        });
+      }
+
+      // Serialize navigation and keep the latest click while a page is loading.
+      async function loadPage(page) {
+        if (!tabOrder.includes(page)) return;
+        updateActiveTab(page);
+        if (changingPage) {
+          queuedPage = page;
+          return;
+        }
+        if (page === currentPage) return;
+        changingPage = true;
+        destinationPage = page;
+        // Count the 800ms wheel delay from the start, not the end.
+        wheelBlockedUntil = performance.now() + 800;
+        content.setAttribute("aria-busy", "true");
+        content.style.pointerEvents = "none";
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
+        const direction =
+          currentPage && tabOrder.indexOf(page) < tabOrder.indexOf(currentPage) ? -1 : 1;
+        try {
+          // Keep the existing page visible if fetching fails.
+          const response = await fetch(page, { signal: controller.signal });
+          if (!response.ok) throw new Error(`Unable to load ${page}: ${response.status}`);
+          const html = await response.text();
+          clearTimeout(timeout);
+          if (currentPage) await animatePage(false, direction);
+          content.style.opacity = "0";
+          content.dispatchEvent(new Event("pageleave"));
+          content.innerHTML = html;
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+          runScripts(content);
+          currentPage = page;
+          await settlePageLayout();
+          if (firstPagePending) await finishFirstLoad();
+          else await waitForImages(content);
+          await settlePageLayout();
+          content.style.opacity = "1";
+          content.dispatchEvent(new Event("pagereveal"));
+          await animatePage(true, direction);
+        } catch (error) {
+          console.error("Page navigation failed:", error);
+          if (firstPagePending) {
+            currentPage = null;
+            document.getElementById('helloError').hidden = false;
+          }
+        } finally {
+          clearTimeout(timeout);
+          content.style.opacity = "1";
+          content.removeAttribute("aria-busy");
+          content.style.removeProperty("pointer-events");
+          changingPage = false;
+          wheelTotal = 0;
+          destinationPage = null;
+          const nextPage = queuedPage;
+          queuedPage = null;
+          if (nextPage && nextPage !== currentPage) loadPage(nextPage);
+          // Restore the visible page if loading fails; never overwrite a queued click.
+          else updateActiveTab(currentPage || "home.html");
+        }
+      }
+
+      // NAVIGATION CLICKS: open the selected page without reloading the website.
+      navLinks.forEach((link) => {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          loadPage(link.dataset.page);
+        });
+      });
+      // Start fetching Home while the Hello path is being drawn.
+      queueMicrotask(() => loadPage("home.html"));
+      window.navigateTo = loadPage;
+
+      // DOWNLOAD MENU CONTROLS: toggle, outside click, Escape, and logo click.
+      const headerMore = document.getElementById('headerMore');
+      const moreButton = document.getElementById('headerMoreButton');
+      const downloads = document.getElementById('headerDownloads');
+      const setDownloadsOpen = (open) => {
+        downloads.hidden = !open;
+        moreButton.setAttribute('aria-expanded', String(open));
+      };
+      moreButton.addEventListener('click', () => setDownloadsOpen(downloads.hidden));
+      document.getElementById('homeLogo').addEventListener('click', (event) => {
+        event.preventDefault();
+        setDownloadsOpen(false);
+        loadPage('home.html');
+      });
+      document.addEventListener('pointerdown', (event) => {
+        if (!headerMore.contains(event.target)) setDownloadsOpen(false);
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !downloads.hidden) {
+          setDownloadsOpen(false);
+          moreButton.focus();
+        }
+      });
+      headerMore.addEventListener('focusout', (event) => {
+        if (!headerMore.contains(event.relatedTarget)) setDownloadsOpen(false);
+      });
+      downloads.addEventListener('click', (event) => {
+        if (event.target.closest('a')) {
+          setDownloadsOpen(false);
+          moreButton.focus();
+        }
+      });
+
+      // Preserve scrolling inside nested panels and form controls.
+      function canScrollInside(target, direction) {
+        if (!(target instanceof Element)) return false;
+        if (target.closest("input, textarea, select, [contenteditable]")) return true;
+        for (let node = target; node && node !== document.body; node = node.parentElement) {
+          if (!/(auto|scroll)/.test(getComputedStyle(node).overflowY)) continue;
+          if (direction > 0 && node.scrollTop + node.clientHeight < node.scrollHeight - 2)
+            return true;
+          if (direction < 0 && node.scrollTop > 2) return true;
+        }
+        return false;
+      }
+
+      // Continuous desktop wheel navigation, with an 800ms cooldown at page edges.
+      document.addEventListener(
+        "wheel",
+        (event) => {
+          if (
+            !desktopScroll.matches ||
+            event.ctrlKey ||
+            event.metaKey ||
+            !event.deltaY ||
+            Math.abs(event.deltaX) > Math.abs(event.deltaY)
+          )
+            return;
+          const direction = Math.sign(event.deltaY);
+          if (canScrollInside(event.target, direction)) return;
+          const now = performance.now();
+          const newGesture = now - lastWheelTime > 220;
+          lastWheelTime = now;
+          if (newGesture) {
+            wheelTotal = 0;
+          }
+          const scroller = document.scrollingElement;
+          const atEdge =
+            direction > 0
+              ? scroller.scrollTop + window.innerHeight >= scroller.scrollHeight - 3
+              : scroller.scrollTop <= 3;
+          if (!atEdge && !changingPage) {
+            wheelTotal = 0;
+            return;
+          }
+          const nextIndex = tabOrder.indexOf(destinationPage || currentPage) + direction;
+          if (!currentPage || nextIndex < 0 || nextIndex >= tabOrder.length) return;
+          event.preventDefault();
+          if (now < wheelBlockedUntil) return;
+          const delta =
+            event.deltaY *
+            (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1);
+          if (Math.sign(wheelTotal) !== direction) wheelTotal = 0;
+          wheelTotal += delta;
+          if (Math.abs(wheelTotal) < 60) return;
+          wheelTotal = 0;
+          wheelBlockedUntil = now + 800;
+          loadPage(tabOrder[nextIndex]);
+        },
+        { passive: false },
+      );
+
+      // Vertical touch navigation: swipe up for next, down for previous.
+      // Start at a page edge so long pages keep their normal reading scroll.
+      let touchGesture = null;
+      document.addEventListener("touchstart", (event) => {
+        touchGesture = null;
+        if (event.touches.length !== 1 || !currentPage) return;
+        const touch = event.touches[0];
+        const scroller = document.scrollingElement;
+        touchGesture = {
+          x: touch.clientX,
+          y: touch.clientY,
+          target: event.target,
+          atTop: scroller.scrollTop <= 3,
+          atBottom: scroller.scrollTop + window.innerHeight >= scroller.scrollHeight - 3,
+          direction: 0,
+          distance: 0,
+        };
+      }, { passive: true });
+
+      document.addEventListener("touchmove", (event) => {
+        if (!touchGesture) return;
+        if (event.touches.length !== 1) { touchGesture = null; return; }
+        const dx = event.touches[0].clientX - touchGesture.x;
+        const dy = touchGesture.y - event.touches[0].clientY;
+        touchGesture.direction = 0;
+        touchGesture.distance = 0;
+        if (Math.abs(dy) <= Math.abs(dx) || Math.abs(dy) < 10) return;
+        const direction = Math.sign(dy);
+        if (canScrollInside(touchGesture.target, direction)) return;
+        if (direction > 0 ? !touchGesture.atBottom : !touchGesture.atTop) return;
+        const index = tabOrder.indexOf(destinationPage || currentPage) + direction;
+        if (index < 0 || index >= tabOrder.length) return;
+        // Prevent overscroll only when this gesture can navigate to another page.
+        if (event.cancelable) event.preventDefault();
+        touchGesture.direction = direction;
+        touchGesture.distance = Math.abs(dy);
+      }, { passive: false });
+
+      document.addEventListener("touchend", () => {
+        const gesture = touchGesture;
+        touchGesture = null;
+        if (!gesture || !gesture.direction || gesture.distance < 60) return;
+        const now = performance.now();
+        if (now < wheelBlockedUntil) return;
+        const index = tabOrder.indexOf(destinationPage || currentPage) + gesture.direction;
+        if (index < 0 || index >= tabOrder.length) return;
+        wheelBlockedUntil = now + 800;
+        loadPage(tabOrder[index]);
+      }, { passive: true });
+
+      // Leave pinch zoom and cancelled gestures to the browser.
+      document.addEventListener("touchcancel", () => { touchGesture = null; }, { passive: true });
+    </script>
+  </body>
+</html>

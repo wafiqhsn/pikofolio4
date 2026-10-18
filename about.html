@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About — Wafiq Hasan</title>
+    <style>
+      .about-page, .about-page * { box-sizing: border-box; }
+      /* PAGE LAYOUT: center the content and leave space for the header and footer. */
+      .about-page {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 112px 32px 96px;
+        background: #fff;
+        color: #000;
+      }
+      /* CONTENT WIDTH: limits how wide the paragraph can become. */
+      .about-content { width: 100%; max-width: 840px; text-align: center; }
+      /* ABOUT TEXT: Times New Roman, font size, and line spacing. */
+      .about-copy {
+        margin: 0;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 1.5;
+      }
+      .about-copy em { font-style: italic; }
+      /* DOWNLOAD BUTTONS: spacing, colors, and button text. */
+      .about-downloads {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 28px;
+      }
+      .about-download {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 11px;
+        border-radius: 7px;
+        background: #eceef1;
+        color: #111;
+        font: 16px/1.2 Helvetica, Arial, sans-serif;
+        text-decoration: none;
+      }
+      .about-download--portfolio { background: #000; color: #fff; }
+      .about-download:focus-visible { outline: 2px solid #777; outline-offset: 4px; }
+      /* MOBILE SETTINGS: smaller text and page padding. */
+      @media (max-width: 767px) {
+        .about-page { padding: 96px 24px 80px; }
+        .about-content { max-width: 560px; }
+        .about-copy { font-size: 20px; line-height: 1.45; }
+        .about-downloads { gap: 10px; margin-top: 24px; }
+        .about-download { font-size: 14px; }
+      }
+    </style>
+  </head>
+  <body style="margin: 0">
+    <section id="about" class="about-page" aria-label="About Wafiq">
+      <div class="about-content">
+        <!-- ABOUT BIO: edit the paragraph here; em tags make words italic. -->
+        <p class="about-copy">Piko is a creative designer based in Jakarta 🌲, working across <em>graphic design, motion,</em> and <em>digital experiences</em> 🖥️. His practice draws on a curiosity for art, architecture, fashion, music and culture 🎨. From a visual identity to an image in motion or an interface, he explores how ideas can take shape, move and connect with people 🤍. At the heart of it all is a simple belief: <em>form follows function and a little bit of fun</em> ✏️</p>
+        <!-- DOWNLOAD LINKS: update the resume and portfolio URLs here. -->
+        <div class="about-downloads">
+          <a class="about-download" href="https://drive.google.com/file/d/1ptUa8NC2_C57vPdolugWmaEgKEF1b3-g/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Download Resume</a>
+          <a class="about-download about-download--portfolio" href="https://drive.google.com/file/d/1llZMCI6Dl_-RVUQu9ySJ4RSdKSjKFMhu/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Download Portfolio</a>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
