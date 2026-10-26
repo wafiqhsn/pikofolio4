@@ -4,16 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home — Piko</title>
-    <style>
-      /* FONT: local Instrument Serif file used by the hero text. */
-      @font-face {
-        font-family: "Instrument Serif";
-        src: url("Fonts/InstrumentSerif-Regular.ttf") format("truetype");
-        font-style: normal;
-        font-weight: 400;
-        font-display: swap;
-      }
-
+    <link rel="stylesheet" href="Fonts/arial-narrow.css" />
+<style>
+      *, *::before, *::after { font-family: Arial, sans-serif !important; }
       .home-viewport,
       .home-viewport * {
         box-sizing: border-box;
@@ -32,7 +25,7 @@
         margin: 0;
         background: #fff;
         color: #111;
-        font-family: Helvetica, Arial, sans-serif;
+        font-family: Arial, sans-serif;
       }
 
       /* HERO GROUP: spacing between the intro text and the image scene. */
@@ -48,10 +41,11 @@
 
       /* HERO TEXT: font size, line spacing, and maximum text width. */
       .home-intro {
+        text-wrap: balance;
         width: auto;
         max-width: min(100%, 720px);
         margin: 0;
-        font-family: "Instrument Serif", Georgia, serif;
+        font-family: "Arial Narrow", Arial, sans-serif !important;
         font-size: 32px;
         font-weight: 400;
         line-height: 1.5;
@@ -105,6 +99,46 @@
         user-select: none;
       }
 
+      /* Split portrait: one shared canvas keeps every pose aligned with the fixed base. */
+      .home-person-base, .home-person-pose {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        object-fit: fill;
+      }
+      .home-person-base { top: 44.556962%; height: 55.443038%; }
+      .home-person-pose { top: 0; height: 44.556962%; opacity: 0; }
+      .home-person-pose[data-pose="1"] { opacity: 1; }
+      .home-scene[data-person-pose="2"] .home-person-pose,
+      .home-scene[data-person-pose="3"] .home-person-pose { opacity: 0; }
+      .home-scene[data-person-pose="2"] .home-person-pose[data-pose="2"],
+      .home-scene[data-person-pose="3"] .home-person-pose[data-pose="3"] { opacity: 1; }
+
+      /* Live clock: cover only the printed number panels, preserving the original casing. */
+      .home-clock-display {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .home-clock-display text {
+        fill: #dce3e5;
+        font-family: "Arial Narrow", Arial, sans-serif !important;
+        font-size: 50px;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-anchor: middle;
+        dominant-baseline: central;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Match the phone receiver to Piko's pose, including the shared 500ms hold. */
+      .home-telephone-image { position: absolute; inset: 0; }
+      .home-telephone-image--hover { opacity: 0; }
+      .home-scene[data-person-pose="2"] .home-telephone-image--default { opacity: 0; }
+      .home-scene[data-person-pose="2"] .home-telephone-image--hover { opacity: 1; }
+
       .home-detail { z-index: 20; }
       .home-object:focus-visible, .home-detail:focus-visible {
         outline: 1px dashed #ffce32;
@@ -156,7 +190,36 @@
         transform: translate(-50%, -100%);
       }
 
-      .home-scene, .home-scene * { cursor: default; }
+      /* LAST.FM: inherit the same bubble and typography as other object labels. */
+      #home-tip-spotify {
+        max-width: min(220px, calc(100vw - 32px));
+        text-align: center;
+        white-space: normal;
+        margin-left: var(--music-shift, 0px);
+      }
+      #home-tip-spotify::after { left: calc(50% - var(--music-shift, 0px)); }
+      #home-tip-spotify .home-track-title,
+      #home-tip-spotify .home-track-artist,
+      #home-tip-spotify .home-track-time {
+        display: block;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        color: inherit;
+        overflow-wrap: anywhere;
+      }
+      #home-tip-spotify .home-track-artist,
+      #home-tip-spotify .home-track-time { margin-top: 0.25em; font-size: 0.85em; }
+      #home-tip-spotify .home-track-title {
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      #home-tip-spotify .home-track-time { opacity: 0.5; }
+
+      .home-scene { cursor: default; }
+      .home-scene * { cursor: inherit; }
 
       /* PIKO BUBBLE: grows with the typed text; bottom-left corner stays square. */
       .home-tooltip--speech {
@@ -216,34 +279,35 @@
         }
         .home-shadow { width: 145%; top: 93%; }
           /* MOBILE OBJECT POSITIONS: keep all assets at the same relative scale. */
-        .home-object[data-object="person"] { --mobile-x:26.04396%; --mobile-y:0.00000%; --mobile-w:50.87912%; --mobile-h:95.52625%; }
-        .home-object[data-object="desk"] { --mobile-x:-18.83099%; --mobile-y:40.38705%; --mobile-w:137.66197%; --mobile-h:52.96265%; }
-        .home-object[data-object="lamp"] { --mobile-x:47.80220%; --mobile-y:3.99034%; --mobile-w:50.60008%; --mobile-h:38.93601%; }
-        #home-tip-lamp { left:73.10224%; top:calc(3.99034% - 8px); }
-        .home-object[data-object="projects"] { --mobile-x:9.89011%; --mobile-y:3.22988%; --mobile-w:29.11365%; --mobile-h:38.99647%; }
-        #home-tip-projects { left:24.44693%; top:calc(3.92988% - 8px); }
-        .home-object[data-object="reference"] { --mobile-x:-1.09890%; --mobile-y:37.36406%; --mobile-w:21.30040%; --mobile-h:5.68321%; }
-        #home-tip-reference { left:9.55130%; top:calc(37.36406% - 8px); }
-        .home-object[data-object="plant"] { --mobile-x:-8.24176%; --mobile-y:4.23218%; --mobile-w:28.64857%; --mobile-h:33.13189%; }
-        #home-tip-plant { left:6.08253%; top:calc(4.23218% - 8px); }
-        .home-object[data-object="apple"] { --mobile-x:10.98901%; --mobile-y:30.35074%; --mobile-w:5.20883%; --mobile-h:7.07378%; }
-        #home-tip-apple { left:13.59343%; top:calc(30.35074% - 8px); }
-        .home-object[data-object="spotify"] { --mobile-x:75.60440%; --mobile-y:18.25881%; --mobile-w:8.09229%; --mobile-h:24.66754%; }
-        #home-tip-spotify { left:79.65054%; top:calc(18.25881% - 8px); }
-        .home-object[data-object="contact"] { --mobile-x:61.53846%; --mobile-y:31.49948%; --mobile-w:20.55628%; --mobile-h:11.48733%; }
-        #home-tip-contact { left:71.81660%; top:calc(31.49948% - 8px); }
-        .home-object[data-object="clock"] { --mobile-x:82.19780%; --mobile-y:35.61073%; --mobile-w:11.11527%; --mobile-h:7.37608%; }
-        #home-tip-clock { left:87.75544%; top:calc(35.61073% - 8px); }
-        .home-object[data-object="coffee"] { --mobile-x:51.86813%; --mobile-y:35.73165%; --mobile-w:9.02244%; --mobile-h:7.37608%; }
-        #home-tip-coffee { left:56.37935%; top:calc(35.73165% - 8px); }
-        .home-detail[data-detail="watch"] { --mobile-x:47.69231%; --mobile-y:37.14286%; --mobile-w:2.85714%; --mobile-h:4.28571%; }
-        #home-tip-watch { left:49.12088%; top:calc(37.14286% - 8px); }
-        .home-detail[data-detail="shoes"] { --mobile-x:26.04396%; --mobile-y:71.42857%; --mobile-w:17.03297%; --mobile-h:24.00000%; }
-        #home-tip-shoes { left:34.56044%; top:calc(71.42857% - 8px); }
+        .home-object[data-object="person"] { --mobile-x:24.13970%; --mobile-y:0.0%; --mobile-w:52.13446%; --mobile-h:95.52625%; }
+        .home-object[data-object="desk"] { --mobile-x:-18.8%; --mobile-y:40.4%; --mobile-w:137.66197%; --mobile-h:52.96265%; }
+        .home-object[data-object="lamp"] { --mobile-x:47.8%; --mobile-y:4.0%; --mobile-w:50.60008%; --mobile-h:38.93601%; }
+        #home-tip-lamp { left:73.1%; top:calc(4.0% - 8px); }
+        .home-object[data-object="projects"] { --mobile-x:9.9%; --mobile-y:3.2%; --mobile-w:29.11365%; --mobile-h:38.99647%; }
+        #home-tip-projects { left:24.4%; top:calc(3.9% - 8px); }
+        .home-object[data-object="reference"] { --mobile-x:-1.1%; --mobile-y:37.4%; --mobile-w:21.30040%; --mobile-h:5.68321%; }
+        #home-tip-reference { left:9.6%; top:calc(37.4% - 8px); }
+        .home-object[data-object="plant"] { --mobile-x:-8.2%; --mobile-y:4.2%; --mobile-w:28.64857%; --mobile-h:33.13189%; }
+        #home-tip-plant { left:6.1%; top:calc(4.2% - 8px); }
+        .home-object[data-object="apple"] { --mobile-x:11.0%; --mobile-y:30.4%; --mobile-w:5.20883%; --mobile-h:7.07378%; }
+        #home-tip-apple { left:13.6%; top:calc(30.4% - 8px); }
+        .home-object[data-object="spotify"] { --mobile-x:75.6%; --mobile-y:18.3%; --mobile-w:8.09229%; --mobile-h:24.66754%; }
+        #home-tip-spotify { left:79.7%; top:calc(18.3% - 8px); }
+        .home-object[data-object="contact"] { --mobile-x:61.5%; --mobile-y:31.5%; --mobile-w:20.55628%; --mobile-h:11.48733%; }
+        #home-tip-contact { left:71.8%; top:calc(31.5% - 8px); }
+        .home-object[data-object="clock"] { --mobile-x:82.2%; --mobile-y:35.6%; --mobile-w:11.11527%; --mobile-h:7.37608%; }
+        #home-tip-clock { left:87.8%; top:calc(35.6% - 8px); }
+        .home-object[data-object="coffee"] { --mobile-x:51.9%; --mobile-y:35.7%; --mobile-w:9.02244%; --mobile-h:7.37608%; }
+        #home-tip-coffee { left:56.4%; top:calc(35.7% - 8px); }
+        .home-detail[data-detail="watch"] { --mobile-x:47.7%; --mobile-y:37.1%; --mobile-w:2.85714%; --mobile-h:4.28571%; }
+        #home-tip-watch { left:49.1%; top:calc(37.1% - 8px); }
+        .home-detail[data-detail="shoes"] { --mobile-x:26.0%; --mobile-y:71.4%; --mobile-w:17.03297%; --mobile-h:24.00000%; }
+        #home-tip-shoes { left:34.6%; top:calc(71.4% - 8px); }
         #home-tip-piko { left: 49%; top: 0; }
       }
       .home-entrance-pending .home-intro,
       .home-entrance-pending .home-scene { opacity: 0; }
+      .home-intro, .home-intro * { font-family: "Arial Narrow", Arial, sans-serif !important; }
     </style>
   </head>
   <body style="margin: 0">
@@ -256,31 +320,44 @@
         <!-- LABEL POSITIONS: label-x centers on the full image box, including transparency. -->
         <div class="home-scene" aria-label="Explore the objects on Piko’s desk">
           <img class="home-shadow" src="Images/HeroImages/Shadow.png" alt="" aria-hidden="true" width="1033" height="93" draggable="false" />
-          <div class="home-object" data-object="desk" style="--x:2.29406%; --y:39.59465%; --w:95.68300%; --h:51.92352%; z-index:1;"><img class="home-object-image" src="Images/HeroImages/Desk.png" alt="Desk" width="2960" height="876" fetchpriority="high" draggable="false" /></div>
-          <button class="home-object" data-object="lamp" type="button" aria-label="Lamp" aria-describedby="home-tip-lamp" style="--x:56.51721%; --y:3.91205%; --w:35.16997%; --h:38.17208%; z-index:3;"><img class="home-object-image" src="Images/HeroImages/Lamp.png" alt="" width="1088" height="644" fetchpriority="high" draggable="false" /></button>
-          <span class="home-tooltip" id="home-tip-lamp" role="tooltip" style="--label-x:74.10219%; --label-y:calc(3.91205% - 8px);">LAMP</span>
-          <button class="home-object" data-object="projects" type="button" aria-label="Projects" aria-describedby="home-tip-projects" style="--x:18.51825%; --y:3.25277%; --w:20.23566%; --h:38.23136%; z-index:4;"><img class="home-object-image" src="Images/HeroImages/Computer.png" alt="" width="626" height="645" fetchpriority="high" draggable="false" /></button>
-          <span class="home-tooltip" id="home-tip-projects" role="tooltip" style="--label-x:27.63608%; --label-y:calc(3.85277% - 8px);">PROJECTS</span>
-          <button type="button" aria-label="Hi I’m Piko, let’s collaborate!" aria-describedby="home-tip-piko" class="home-object" data-object="person" style="--x:33.36809%; --y:0.00000%; --w:35.36392%; --h:93.65201%; z-index:2;"><img class="home-object-image" src="Images/HeroImages/Person.png" alt="Person" width="1094" height="1580" fetchpriority="high" draggable="false" /></button>
-          <button class="home-object" data-object="reference" type="button" aria-label="Reference" aria-describedby="home-tip-reference" style="--x:7.29927%; --y:36.63098%; --w:14.80501%; --h:5.57170%; z-index:5;"><img class="home-object-image" src="Images/HeroImages/Book.png" alt="" width="458" height="94" fetchpriority="high" draggable="false" /></button>
-          <span class="home-tooltip" id="home-tip-reference" role="tooltip" style="--label-x:14.70177%; --label-y:calc(36.63098% - 8px);">REFERENCE</span>
-          <button class="home-object" data-object="plant" type="button" aria-label="Asparagus" aria-describedby="home-tip-plant" style="--x:2.91971%; --y:4.14914%; --w:19.91241%; --h:32.48184%; z-index:6;"><img class="home-object-image" src="Images/HeroImages/Plant.png" alt="" width="616" height="548" fetchpriority="high" draggable="false" /></button>
-          <span class="home-tooltip" id="home-tip-plant" role="tooltip" style="--label-x:12.87591%; --label-y:calc(4.14914% - 8px);">ASPARAGUS</span>
-          <button class="home-object" data-object="apple" type="button" aria-label="Apple" aria-describedby="home-tip-apple" style="--x:15.22419%; --y:29.75526%; --w:3.62044%; --h:6.93499%; z-index:7;"><img class="home-object-image" src="Images/HeroImages/Apple.png" alt="" width="112" height="117" fetchpriority="high" draggable="false" /></button>
-          <span class="home-tooltip" id="home-tip-apple" role="tooltip" style="--label-x:17.03441%; --label-y:calc(29.75526% - 8px);">APPLE</span>
-          <button class="home-object" data-object="spotify" type="button" aria-label="Spotify" aria-describedby="home-tip-spotify" style="--x:80.08342%; --y:17.90057%; --w:5.62461%; --h:24.18356%; z-index:8;"><img class="home-object-image" src="Images/HeroImages/Speaker.png" alt="" width="174" height="408" fetchpriority="high" draggable="false" /></button>
-          <span class="home-tooltip" id="home-tip-spotify" role="tooltip" style="--label-x:82.89572%; --label-y:calc(17.90057% - 8px);">SPOTIFY</span>
-          <button class="home-object" data-object="contact" type="button" aria-label="Contact" aria-describedby="home-tip-contact" style="--x:69.65589%; --y:30.88145%; --w:14.28780%; --h:11.26195%; z-index:9;"><img class="home-object-image" src="Images/HeroImages/Telephone.png" alt="" width="442" height="190" fetchpriority="high" draggable="false" /></button>
-          <span class="home-tooltip" id="home-tip-contact" role="tooltip" style="--label-x:76.79979%; --label-y:calc(30.88145% - 8px);">CONTACT</span>
-          <button class="home-object" data-object="clock" type="button" aria-label="Clock" aria-describedby="home-tip-clock" style="--x:84.67153%; --y:34.91205%; --w:7.72576%; --h:7.23136%; z-index:10;"><img class="home-object-image" src="Images/HeroImages/clock.png" alt="" width="239" height="122" fetchpriority="high" draggable="false" /></button>
-          <span class="home-tooltip" id="home-tip-clock" role="tooltip" style="--label-x:88.53441%; --label-y:calc(34.91205% - 8px);">CLOCK</span>
-          <button class="home-object" data-object="coffee" type="button" aria-label="Americano" aria-describedby="home-tip-coffee" style="--x:56.51721%; --y:35.03059%; --w:6.27112%; --h:7.23136%; z-index:11;"><img class="home-object-image" src="Images/HeroImages/Coffee.png" alt="" width="194" height="122" fetchpriority="high" draggable="false" /></button>
-          <span class="home-tooltip" id="home-tip-coffee" role="tooltip" style="--label-x:59.65277%; --label-y:calc(35.03059% - 8px);">AMERICANO</span>
+          <div class="home-object" data-object="desk" style="--x:2.3%; --y:39.6%; --w:95.68300%; --h:51.92352%; z-index:1;"><img class="home-object-image" src="Images/HeroImages/Desk.png" alt="Desk" width="2960" height="876" fetchpriority="high" draggable="false" /></div>
+          <button class="home-object" data-object="lamp" type="button" aria-label="Lamp" aria-describedby="home-tip-lamp" style="--x:56.5%; --y:3.9%; --w:35.16997%; --h:38.17208%; z-index:3;"><img class="home-object-image" src="Images/HeroImages/Lamp.png" alt="" width="1088" height="644" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-lamp" role="tooltip" style="--label-x:74.1%; --label-y:calc(3.9% - 8px);">Lamp</span>
+          <button class="home-object" data-object="projects" type="button" aria-label="Projects" aria-describedby="home-tip-projects" style="--x:18.5%; --y:3.3%; --w:20.23566%; --h:38.23136%; z-index:4;"><img class="home-object-image" src="Images/HeroImages/Computer.png" alt="" width="626" height="645" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-projects" role="tooltip" style="--label-x:27.6%; --label-y:calc(3.9% - 8px);">Projects</span>
+          <button type="button" aria-label="Hi I’m Piko, let’s collaborate!" aria-describedby="home-tip-piko" class="home-object" data-object="person" style="--x:32.10644%; --y:0.0%; --w:36.23634%; --h:93.65201%; z-index:2;">
+            <img class="home-object-image home-person-base" src="Images/HeroImages/Piko0.png" alt="" width="1120" height="876" fetchpriority="high" draggable="false" />
+            <img class="home-object-image home-person-pose" data-pose="1" src="Images/HeroImages/Piko1.png" alt="" width="1121" height="704" fetchpriority="high" draggable="false" />
+            <img class="home-object-image home-person-pose" data-pose="2" src="Images/HeroImages/Piko2.png" alt="" width="1119" height="703" fetchpriority="high" draggable="false" />
+            <img class="home-object-image home-person-pose" data-pose="3" src="Images/HeroImages/Piko3.png" alt="" width="1121" height="702" fetchpriority="high" draggable="false" />
+          </button>
+          <button class="home-object" data-object="reference" type="button" aria-label="Reference" aria-describedby="home-tip-reference" style="--x:7.3%; --y:36.6%; --w:14.80501%; --h:5.57170%; z-index:5;"><img class="home-object-image" src="Images/HeroImages/Book.png" alt="" width="458" height="94" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-reference" role="tooltip" style="--label-x:14.7%; --label-y:calc(36.6% - 8px);">Reference</span>
+          <button class="home-object" data-object="plant" type="button" aria-label="Asparagus" aria-describedby="home-tip-plant" style="--x:2.9%; --y:4.1%; --w:19.91241%; --h:32.48184%; z-index:6;"><img class="home-object-image" src="Images/HeroImages/Plant.png" alt="" width="616" height="548" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-plant" role="tooltip" style="--label-x:12.9%; --label-y:calc(4.1% - 8px);">Asparagus</span>
+          <button class="home-object" data-object="apple" type="button" aria-label="Apple" aria-describedby="home-tip-apple" style="--x:15.2%; --y:29.8%; --w:3.62044%; --h:6.93499%; z-index:7;"><img class="home-object-image" src="Images/HeroImages/Apple.png" alt="" width="112" height="117" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-apple" role="tooltip" style="--label-x:17.0%; --label-y:calc(29.8% - 8px);">Apple</span>
+          <button class="home-object" data-object="spotify" type="button" aria-label="Spotify" aria-describedby="home-tip-spotify" style="--x:80.1%; --y:17.9%; --w:5.62461%; --h:24.18356%; z-index:8;"><img class="home-object-image" src="Images/HeroImages/Speaker.png" alt="" width="174" height="408" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-spotify" role="tooltip" style="--label-x:82.9%; --label-y:calc(17.9% - 8px);"><strong class="home-track-title">Loading music…</strong><span class="home-track-artist">Last.fm</span><span class="home-track-time"></span></span>
+          <button class="home-object" data-object="contact" type="button" aria-label="Contact" aria-describedby="home-tip-contact" style="--x:61.5%; --y:31.5%; --w:14.28780%; --h:11.26195%; z-index:9;"><img class="home-object-image home-telephone-image home-telephone-image--default" src="Images/HeroImages/Telephone.png" alt="" width="442" height="190" fetchpriority="high" draggable="false" /><img class="home-object-image home-telephone-image home-telephone-image--hover" src="Images/HeroImages/Telephone2.png" alt="" width="442" height="190" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-contact" role="tooltip" style="--label-x:68.64390%; --label-y:calc(31.5% - 8px);">Contact</span>
+          <button class="home-object" data-object="clock" type="button" aria-label="Clock" aria-describedby="home-tip-clock" style="--x:84.7%; --y:34.9%; --w:7.72576%; --h:7.23136%; z-index:10;"><img class="home-object-image" src="Images/HeroImages/clock.png" alt="" width="239" height="122" fetchpriority="high" draggable="false" />
+            <svg class="home-clock-display" viewBox="0 0 239 122" aria-hidden="true" focusable="false">
+              <rect x="30" y="29" width="65" height="65" rx="2" fill="#141b1b" />
+              <rect x="115" y="29" width="66" height="65" rx="2" fill="#131919" />
+              <text data-clock-hours x="62.5" y="61.5"></text>
+              <text data-clock-minutes x="148" y="61.5"></text>
+              <path d="M31 60.5h63M116 60.5h64" stroke="#080e0e" stroke-opacity=".35" stroke-width=".8" />
+            </svg>
+          </button>
+          <span class="home-tooltip" id="home-tip-clock" role="tooltip" style="--label-x:88.5%; --label-y:calc(34.9% - 8px);">Clock</span>
+          <button class="home-object" data-object="coffee" type="button" aria-label="Americano" aria-describedby="home-tip-coffee" style="--x:56.5%; --y:35.0%; --w:6.27112%; --h:7.23136%; z-index:11;"><img class="home-object-image" src="Images/HeroImages/Coffee.png" alt="" width="194" height="122" fetchpriority="high" draggable="false" /></button>
+          <span class="home-tooltip" id="home-tip-coffee" role="tooltip" style="--label-x:59.7%; --label-y:calc(35.0% - 8px);">Americano</span>
           <!-- PERSON DETAILS: separate hover areas for the watch and shoes. -->
           <button class="home-detail" type="button" data-detail="watch" aria-label="Casio" aria-describedby="home-tip-watch" style="--x:50%; --y:41%; --w:3%; --h:4%;"></button>
-          <span class="home-tooltip" id="home-tip-watch" role="tooltip" style="--label-x:51.5%; --label-y:40%;">CASIO</span>
+          <span class="home-tooltip" id="home-tip-watch" role="tooltip" style="--label-x:51.5%; --label-y:40%;">Casio</span>
           <button class="home-detail" type="button" data-detail="shoes" aria-label="Chuck 70’s" aria-describedby="home-tip-shoes" style="--x:34%; --y:73%; --w:14%; --h:21%;"></button>
-          <span class="home-tooltip" id="home-tip-shoes" role="tooltip" style="--label-x:41%; --label-y:72%;">CHUCK 70’S</span>
+          <span class="home-tooltip" id="home-tip-shoes" role="tooltip" style="--label-x:41%; --label-y:72%;">Chuck 70’s</span>
           <span class="home-tooltip home-tooltip--speech" id="home-tip-piko" role="note" aria-label="Hi I’m Piko, let’s collaborate!" style="--label-x:51%; --label-y:0%;"><span class="home-speech-text" aria-hidden="true"></span></span>
         </div>
       </div>
@@ -323,10 +400,154 @@
         };
         const controller = new AbortController();
         const options = { signal: controller.signal };
+        const musicTip = scene.querySelector('#home-tip-spotify');
+        const trackTitle = musicTip.querySelector('.home-track-title');
+        const trackArtist = musicTip.querySelector('.home-track-artist');
+        const trackTime = musicTip.querySelector('.home-track-time');
+        const lastfmUser = "wafiqhsn";
+        const lastfmKey = "57700d069f0f6393a652370bf2f79427";
+        let latestTrack = null;
+        let musicTimer;
+        let musicBusy = false;
+        const fitMusicTip = () => {
+          musicTip.style.setProperty('--music-shift', '0px');
+          const rect = musicTip.getBoundingClientRect();
+          const shift = Math.max(16 - rect.left, Math.min(0, window.innerWidth - 16 - rect.right));
+          musicTip.style.setProperty('--music-shift', `${shift}px`);
+        };
+        const relativeTrackTime = (track) => {
+          if (track['@attr']?.nowplaying === 'true') return 'Now playing';
+          const timestamp = Number(track.date?.uts);
+          if (!Number.isFinite(timestamp) || timestamp <= 0) return 'Recently played';
+          const seconds = Math.max(0, Math.floor(Date.now() / 1000 - timestamp));
+          if (seconds < 60) return 'Just now';
+          if (seconds < 3600) return `${Math.floor(seconds / 60)} min ago`;
+          if (seconds < 86400) return `${Math.floor(seconds / 3600)} hr ago`;
+          const days = Math.floor(seconds / 86400);
+          return `${days} ${days === 1 ? 'day' : 'days'} ago`;
+        };
+        const renderTrack = () => {
+          if (!latestTrack) return;
+          trackTitle.textContent = latestTrack.name || 'Unknown track';
+          trackArtist.textContent = latestTrack.artist?.['#text'] || latestTrack.artist?.name || 'Unknown artist';
+          trackTime.textContent = relativeTrackTime(latestTrack);
+          if (musicTip.classList.contains('is-visible')) fitMusicTip();
+        };
+        const loadTrack = async () => {
+          if (controller.signal.aborted || musicBusy) return;
+          clearTimeout(musicTimer);
+          renderTrack();
+          if (document.hidden) {
+            musicTimer = setTimeout(loadTrack, 30000);
+            return;
+          }
+          musicBusy = true;
+          const request = new AbortController();
+          const abortRequest = () => request.abort();
+          controller.signal.addEventListener('abort', abortRequest, { once: true });
+          const timeout = setTimeout(abortRequest, 10000);
+          try {
+            const params = new URLSearchParams({ method: 'user.getrecenttracks', user: lastfmUser, api_key: lastfmKey, format: 'json', limit: '1' });
+            const response = await fetch(`https://ws.audioscrobbler.com/2.0/?${params}`, { signal: request.signal });
+            if (!response.ok) throw new Error('Last.fm unavailable');
+            const data = await response.json();
+            if (data.error) throw new Error('Last.fm unavailable');
+            const tracks = data.recenttracks?.track;
+            const track = Array.isArray(tracks) ? tracks[0] : tracks;
+            if (controller.signal.aborted) return;
+            if (track?.name) {
+              latestTrack = track;
+              renderTrack();
+            } else if (!latestTrack) {
+              trackTitle.textContent = 'No recent tracks';
+              trackArtist.textContent = 'Last.fm';
+              trackTime.textContent = '';
+            }
+          } catch (error) {
+            if (controller.signal.aborted) return;
+            if (latestTrack) {
+              // A failed refresh cannot confirm that an earlier track is still playing.
+              latestTrack = { ...latestTrack, '@attr': {}, date: latestTrack.date };
+              renderTrack();
+            } else {
+              trackTitle.textContent = 'Music unavailable';
+              trackArtist.textContent = 'Last.fm';
+              trackTime.textContent = 'Try again shortly';
+            }
+          } finally {
+            clearTimeout(timeout);
+            controller.signal.removeEventListener('abort', abortRequest);
+            musicBusy = false;
+            if (!controller.signal.aborted) musicTimer = setTimeout(loadTrack, 30000);
+          }
+        };
+        window.addEventListener('resize', () => {
+          if (musicTip.classList.contains('is-visible')) fitMusicTip();
+        }, options);
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) loadTrack();
+        }, options);
+        loadTrack();
+
+        // Follow the visitor's device time in 24-hour format and refresh at each minute boundary.
+        const clock = scene.querySelector('[data-object="clock"]');
+        const clockHours = clock.querySelector('[data-clock-hours]');
+        const clockMinutes = clock.querySelector('[data-clock-minutes]');
+        const clockStatus = scene.querySelector('#home-tip-clock');
+        const jakartaHour = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jakarta', hour: '2-digit', hourCycle: 'h23' });
+        const statusForHour = (hour) => {
+          if (hour >= 23 || hour < 6) return 'Sleeping';
+          if (hour >= 9 && hour < 17) return 'Working';
+          return 'Probably available';
+        };
+        let clockTimer;
+        const updateClock = () => {
+          clearTimeout(clockTimer);
+          if (controller.signal.aborted) return;
+          const now = new Date();
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          clockHours.textContent = hours;
+          clockMinutes.textContent = minutes;
+          const status = statusForHour(Number(jakartaHour.format(now)));
+          clockStatus.textContent = status;
+          clock.setAttribute('aria-label', `Clock, ${hours}:${minutes}. ${status}`);
+          clockTimer = setTimeout(updateClock, 60000 - (now.getSeconds() * 1000 + now.getMilliseconds()));
+        };
+        updateClock();
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) updateClock();
+        }, options);
+
         let active = null;
         let pointerTarget = null;
+        let interactionTarget = null;
+        // POSE HOLD: show each changed pose for at least 500ms; keep only the latest request.
+        const poseHoldMs = 500;
+        let poseTimer;
+        let poseChangedAt = -Infinity;
+        let requestedPose = '1';
+        const applyRequestedPose = () => {
+          poseTimer = undefined;
+          if (controller.signal.aborted || (scene.dataset.personPose || '1') === requestedPose) return;
+          scene.dataset.personPose = requestedPose;
+          poseChangedAt = performance.now();
+        };
+        const requestPose = (pose) => {
+          requestedPose = pose;
+          clearTimeout(poseTimer);
+          poseTimer = undefined;
+          if ((scene.dataset.personPose || '1') === pose) return;
+          const remaining = poseHoldMs - (performance.now() - poseChangedAt);
+          if (remaining <= 0) applyRequestedPose();
+          else poseTimer = setTimeout(applyRequestedPose, remaining);
+        };
         // LABEL CONTROL: show one object label; handle the Piko bubble separately.
         const show = (button) => {
+          interactionTarget = button;
+          if (button?.dataset.object === 'spotify') { renderTrack(); fitMusicTip(); }
+          requestPose(button?.dataset.object === 'contact' ? '2'
+            : ['person', 'coffee'].includes(button?.dataset.object) ? '3' : '1');
           if (button?.dataset.object === 'person') {
             if (automaticFinished) startSpeech();
             button = null;
@@ -357,44 +578,122 @@
           }
           return null;
         };
+        // OBJECT LINKS: use the same alpha-aware targets for mouse clicks and touch taps.
+        const objectLinks = {
+          projects: { page: 'work.html' },
+          spotify: { url: 'https://open.spotify.com/user/exo6k0vh52vbopuqnrtx3j3jp?si=dbcd2a7b11054e1c' },
+          reference: { url: 'https://id.pinterest.com/wafikhsn/' },
+          person: { page: 'about.html' },
+          contact: { email: 'mailto:wafiqhasan10@gmail.com' },
+        };
+        const linkFor = (target) => objectLinks[target?.dataset.detail ? 'person' : target?.dataset.object];
+        const activateObject = (target) => {
+          const link = linkFor(target);
+          if (!link) return false;
+          if (link.page) {
+            if (typeof window.navigateTo === 'function') window.navigateTo(link.page);
+            else window.location.assign(link.page);
+          } else if (link.email) window.location.assign(link.email);
+          else window.open(link.url, '_blank', 'noopener,noreferrer');
+          return true;
+        };
+        // Mobile touch: first tap previews; a second tap on the same object opens it.
+        let mobileTapTarget = null;
+        let touchStart = null;
+        let suppressClickUntil = 0;
+        const tapKey = (target) => target?.dataset.detail
+          ? scene.querySelector('[data-object="person"]') : target;
+        const previewOrOpen = (target) => {
+          const key = tapKey(target);
+          if (key && mobileTapTarget === key && linkFor(target)) {
+            mobileTapTarget = null;
+            activateObject(target);
+            return;
+          }
+          const wasSelected = key && mobileTapTarget === key;
+          mobileTapTarget = wasSelected ? null : key;
+          show(wasSelected ? null : target);
+        };
+        // Handle actual touch events instead of relying on a browser's synthetic mouse click.
+        scene.addEventListener('touchstart', (event) => {
+          suppressClickUntil = performance.now() + 1000;
+          touchStart = event.touches.length === 1
+            ? { x: event.touches[0].clientX, y: event.touches[0].clientY, moved: false } : null;
+        }, { ...options, passive: true });
+        scene.addEventListener('touchmove', (event) => {
+          if (!touchStart) return;
+          if (event.touches.length !== 1 || Math.hypot(
+            event.touches[0].clientX - touchStart.x,
+            event.touches[0].clientY - touchStart.y
+          ) > 12) touchStart.moved = true;
+        }, { ...options, passive: true });
+        scene.addEventListener('touchend', (event) => {
+          const start = touchStart;
+          touchStart = null;
+          suppressClickUntil = performance.now() + 1000;
+          if (!start || start.moved || event.touches.length || !event.changedTouches.length) return;
+          const touch = event.changedTouches[0];
+          if (Math.hypot(touch.clientX - start.x, touch.clientY - start.y) > 12) return;
+          if (event.cancelable) event.preventDefault();
+          previewOrOpen(hitAt(touch));
+        }, { ...options, passive: false });
+        scene.addEventListener('touchcancel', () => {
+          touchStart = null;
+          suppressClickUntil = performance.now() + 1000;
+        }, { ...options, passive: true });
+        // Capture and discard compatibility clicks before they can reach a button handler.
+        scene.addEventListener('click', (event) => {
+          if (performance.now() >= suppressClickUntil) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }, { ...options, capture: true });
+        scene.addEventListener('click', (event) => {
+          if (event.detail === 0) return;
+          const target = hitAt(event);
+          if (event.pointerType === 'touch') {
+            event.preventDefault();
+            previewOrOpen(target);
+          } else {
+            mobileTapTarget = null;
+            if (activateObject(target)) event.preventDefault();
+          }
+        }, options);
         // INTERACTION: mouse hover, touch taps, and keyboard focus.
         scene.addEventListener('pointermove', (event) => {
-          if (event.pointerType !== 'touch') {
+          if (event.pointerType !== 'touch' && performance.now() >= suppressClickUntil) {
             const target = hitAt(event);
             if (target !== pointerTarget) {
               pointerTarget = target;
+              scene.style.cursor = linkFor(target) ? 'pointer' : 'default';
               show(target);
             }
           }
         }, options);
         scene.addEventListener('pointerleave', (event) => {
-          if (event.pointerType !== 'touch') { pointerTarget = null; show(null); }
-        }, options);
-        scene.addEventListener('pointerup', (event) => {
-          if (event.pointerType === 'touch') {
-            const target = hitAt(event);
-            show(active === target ? null : target);
-          }
+          if (event.pointerType !== 'touch' && performance.now() >= suppressClickUntil) { pointerTarget = null; scene.style.cursor = 'default'; show(null); }
         }, options);
         scene.querySelectorAll('button').forEach((button) => {
           button.addEventListener('focus', () => show(button), options);
-          button.addEventListener('blur', () => { if (active === button) show(null); }, options);
+          button.addEventListener('blur', () => { if (interactionTarget === button) show(null); }, options);
           button.addEventListener('click', (event) => {
-            if (event.detail === 0) show(active === button ? null : button);
+            if (event.detail === 0) {
+              if (activateObject(button)) event.preventDefault();
+              else show(interactionTarget === button ? null : button);
+            }
           }, options);
         });
         document.addEventListener('pointerdown', (event) => {
-          if (!scene.contains(event.target)) show(null);
+          if (!scene.contains(event.target)) { mobileTapTarget = null; show(null); }
         }, options);
         document.addEventListener('keydown', (event) => {
-          if (event.key === 'Escape') show(null);
+          if (event.key === 'Escape') { mobileTapTarget = null; show(null); }
         }, options);
         const content = document.getElementById('content');
         const photos = [...scene.querySelectorAll('.home-object-image')];
         const speech = scene.querySelector('#home-tip-piko');
         const typed = speech.querySelector('.home-speech-text');
         // PIKO MESSAGE: \n starts a new line in the bubble.
-        const message = 'HI I’M PIKO, LET’S\nCOLLABORATE!';
+        const message = 'Hi I’m Piko, let’s\ncollaborate!';
         let delayTimer;
         let typingTimer;
         let speechBusy = false;
@@ -438,13 +737,38 @@
           if (photo.decode) await photo.decode().catch(() => {});
           else if (!photo.complete) await Promise.race([waitFor(photo, 'load'), waitFor(photo, 'error')]);
           if (controller.signal.aborted || !photo.naturalWidth) return;
+          if (['person', 'contact'].includes(photo.parentElement.dataset.object)) return;
           const canvas = document.createElement('canvas');
           canvas.width = photo.naturalWidth;
           canvas.height = photo.naturalHeight;
           const context = canvas.getContext('2d', { willReadFrequently: true });
           context.drawImage(photo, 0, 0);
           masks.set(photo.parentElement, context.getImageData(0, 0, canvas.width, canvas.height));
-        }));
+        })).then(() => {
+          if (controller.signal.aborted) return;
+          // Keep a stable phone hit area across both receiver states.
+          const phone = scene.querySelector('[data-object="contact"]');
+          const phoneCanvas = document.createElement('canvas');
+          phoneCanvas.width = 442;
+          phoneCanvas.height = 190;
+          const phoneContext = phoneCanvas.getContext('2d', { willReadFrequently: true });
+          for (const photo of phone.querySelectorAll('.home-object-image')) {
+            if (photo.naturalWidth) phoneContext.drawImage(photo, 0, 0, 442, 190);
+          }
+          masks.set(phone, phoneContext.getImageData(0, 0, 442, 190));
+          const person = scene.querySelector('[data-object="person"]');
+          const canvas = document.createElement('canvas');
+          canvas.width = 1121;
+          canvas.height = 1580;
+          const context = canvas.getContext('2d', { willReadFrequently: true });
+          const base = person.querySelector('.home-person-base');
+          if (base.naturalWidth) context.drawImage(base, 0, 704, 1121, 876);
+          // A stable union of the resting and waving silhouettes prevents hover flicker.
+          for (const pose of person.querySelectorAll('[data-pose="1"], [data-pose="3"]')) {
+            if (pose.naturalWidth) context.drawImage(pose, 0, 0, 1121, 704);
+          }
+          masks.set(person, context.getImageData(0, 0, canvas.width, canvas.height));
+        });
         // AUTO GREETING: show once, 2 seconds after the page and images are ready.
         Promise.all([pageReady, imageReady]).then(() => {
           if (controller.signal.aborted) return;
@@ -457,6 +781,9 @@
           entranceAnimations.forEach((animation) => animation.cancel());
           clearTimeout(delayTimer);
           clearTimeout(typingTimer);
+          clearTimeout(poseTimer);
+          clearTimeout(clockTimer);
+          clearTimeout(musicTimer);
           controller.abort();
         }, { once: true });
       })();

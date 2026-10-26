@@ -1,0 +1,148 @@
+<link rel="stylesheet" href="Fonts/arial-narrow.css" />
+<style>
+  #labs, #labs * { box-sizing: border-box; font-family: Arial, sans-serif; }
+  #labs { max-width: 880px; min-height: 100vh; min-height: 100dvh; margin: 0 auto; padding: 112px 32px 96px; color: #111; }
+  #labs .labs-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 32px; }
+  #labs h1 { margin: 0; font-family: "Arial Narrow", Arial, sans-serif !important; font-size: 40px; font-weight: 400; line-height: 1.1; }
+  #labs .labs-intro { margin: 10px 0 0; color: #777; font-size: 14px; line-height: 1.5; }
+  #labs .labs-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; list-style: none; padding: 0; margin: 0; }
+  #labs .labs-list > li { display: flex; min-width: 0; }
+  #labs .labs-repo { display: flex; flex-direction: column; width: 100%; min-height: 180px; padding: 22px; border: 0; border-radius: 16px; background: #f8f9fa; color: inherit; text-decoration: none; }
+  #labs .labs-repo-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  #labs .labs-repo-heading { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  #labs .labs-icon { display: block; width: 24px; height: 24px; flex: 0 0 24px; object-fit: contain; }
+  #labs .labs-name { margin: 0; overflow-wrap: anywhere; font-size: 20px; line-height: 1.3; font-weight: 400; }
+  #labs .labs-description { margin: 8px 0 0; color: #777; font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+  #labs .labs-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 16px; color: #888; font-size: 12px; }
+  #labs .labs-meta > * { display: inline-flex; align-items: center; padding: 3px 7px; border-radius: 999px; background: #eceef1; color: #777; font-size: 10px; line-height: 1.2; }
+  #labs .labs-status { color: #777; font-size: 14px; line-height: 1.6; }
+  #labs .labs-status[hidden], #labs .labs-retry[hidden] { display: none; }
+  #labs .labs-retry { padding: 8px 14px; border: 0; border-radius: 999px; background: #eceef1; color: #111; font-size: 13px; cursor: pointer; }
+  #labs a:focus-visible, #labs button:focus-visible { outline: 2px solid #777; outline-offset: 5px; }
+  @media (max-width: 767px) {
+    #labs { padding: 88px 24px 80px; }
+    #labs .labs-header { gap: 16px; margin-bottom: 24px; }
+    #labs h1 { font-size: 32px; }
+    #labs .labs-name { font-size: 18px; }
+    #labs .labs-list { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    #labs .labs-repo { min-height: 160px; padding: 20px; }
+  }
+</style>
+<section id="labs" aria-labelledby="labs-title">
+  <header class="labs-header">
+    <div><h1 id="labs-title">Labs</h1><p class="labs-intro">Experiments &amp; projects on GitHub.</p></div>
+  </header>
+  <p class="labs-status" role="status">Loading repositories…</p>
+  <ul class="labs-list" aria-label="GitHub repositories" aria-busy="true"></ul>
+  <button class="labs-retry" type="button" hidden>Try again</button>
+</section>
+<script>
+  (() => {
+    const labs = document.getElementById('labs');
+    const list = labs.querySelector('.labs-list');
+    const status = labs.querySelector('.labs-status');
+    const retry = labs.querySelector('.labs-retry');
+    const controller = new AbortController();
+    const githubUser = 'wafiqhsn';
+    const repoIcons = {"wafiqhsn.github.io": "Images/Labs/wafiqhsn.github.io.png", "pikofolio4": "Images/Labs/pikofolio4.png", "pikofolio": "Images/Labs/pikofolio.png", "pikofolio3": "Images/Labs/pikofolio3.png", "pikofolio2": "Images/Labs/pikofolio2.png", "beadstudio": "Images/Labs/repository.svg"};
+    const savedRepos = [{"name": "beadstudio", "description": "A digital playground for designing bead bracelets and necklaces. Arrange shapes, colors, and letters, then export your creation as a poster.", "language": "HTML", "stargazers_count": 0, "fork": false, "archived": false, "pushed_at": "2026-10-19T09:52:43Z", "updated_at": "2026-10-19T09:52:47Z"}, {"name": "pikofolio4", "description": "A portfolio imagined as Piko's desk. Everyday objects become entry points to projects, personal references, music, and contact.", "language": "HTML", "stargazers_count": 0, "fork": false, "archived": false, "pushed_at": "2026-10-18T23:21:30Z", "updated_at": "2026-10-18T23:21:34Z"}, {"name": "wafiqhsn.github.io", "description": "A personal scrapbook translated into an interactive portfolio. Music, photos, notes, and project folders form a collage of Piko's work and interests.", "language": "HTML", "stargazers_count": 0, "fork": false, "archived": false, "pushed_at": "2026-10-11T07:12:59Z", "updated_at": "2026-10-11T07:13:02Z"}, {"name": "pikofolio3", "description": "A portfolio told in three scenes: an introduction, a project gallery, and a profile. Scroll transitions turn the visit into a guided visual journey.", "language": "HTML", "stargazers_count": 0, "fork": false, "archived": false, "pushed_at": "2026-06-10T14:46:23Z", "updated_at": "2026-06-23T06:39:43Z"}, {"name": "pikofolio2", "description": "A portfolio conceived as a floating collection of personal objects. Scrolling connects the introduction, selected work, and the designer's background.", "language": "HTML", "stargazers_count": 0, "fork": false, "archived": false, "pushed_at": "2026-05-18T01:43:43Z", "updated_at": "2026-05-18T01:43:47Z"}, {"name": "pikofolio", "description": "A visual archive presented as a fan of project cards. Each work feels like a collectible, with a separate panel for the designer's story.", "language": "HTML", "stargazers_count": 0, "fork": false, "archived": false, "pushed_at": "2026-05-04T17:53:53Z", "updated_at": "2026-05-10T14:43:32Z"}];
+    const node = (tag, className, text) => {
+      const element = document.createElement(tag);
+      element.className = className;
+      element.textContent = text;
+      return element;
+    };
+    const repoDestination = (repo) => {
+      if (repo.language?.toLowerCase() === 'html') {
+        const base = `https://${githubUser}.github.io/`;
+        return repo.name.toLowerCase() === `${githubUser}.github.io`
+          ? base : `${base}${encodeURIComponent(repo.name)}/`;
+      }
+      return `https://github.com/${encodeURIComponent(githubUser)}/${encodeURIComponent(repo.name)}`;
+    };
+    const render = (repos) => {
+      const fragment = document.createDocumentFragment();
+      for (const repo of repos) {
+        const item = document.createElement('li');
+        const link = document.createElement('a');
+        link.className = 'labs-repo';
+        link.href = repoDestination(repo);
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        const top = node('div', 'labs-repo-top', '');
+        const heading = node('div', 'labs-repo-heading', '');
+        const icon = document.createElement('img');
+        icon.className = 'labs-icon';
+        icon.alt = '';
+        icon.width = 24;
+        icon.height = 24;
+        icon.decoding = 'async';
+        icon.addEventListener('error', () => { icon.src = 'Images/Labs/repository.svg'; }, { once: true });
+        icon.src = repoIcons[repo.name] || (repo.default_branch
+          ? `https://raw.githubusercontent.com/${githubUser}/${encodeURIComponent(repo.name)}/${encodeURIComponent(repo.default_branch)}/favicon.png`
+          : 'Images/Labs/repository.svg');
+        heading.append(icon, node('h2', 'labs-name', repo.name));
+        top.append(heading);
+        link.append(top);
+        if (repo.description) link.append(node('p', 'labs-description', repo.description));
+        const meta = node('div', 'labs-meta', '');
+        if (repo.language) meta.append(node('span', '', repo.language));
+        if (repo.stargazers_count) meta.append(node('span', '', `★ ${repo.stargazers_count}`));
+        if (repo.fork) meta.append(node('span', '', 'Fork'));
+        if (repo.archived) meta.append(node('span', '', 'Archived'));
+        const updatedAt = repo.pushed_at || repo.updated_at;
+        const updatedDate = updatedAt ? new Date(updatedAt) : null;
+        if (updatedDate && !Number.isNaN(updatedDate.getTime())) {
+          const label = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(updatedDate);
+          const date = node('time', 'labs-date', `Updated ${label}`);
+          date.dateTime = updatedDate.toISOString();
+          meta.append(date);
+        }
+        if (meta.childElementCount) link.append(meta);
+        item.append(link);
+        fragment.append(item);
+      }
+      list.replaceChildren(fragment);
+    };
+    const loadRepos = async () => {
+      status.hidden = list.childElementCount > 0;
+      status.textContent = 'Loading repositories…';
+      retry.hidden = true;
+      list.setAttribute('aria-busy', 'true');
+      const request = new AbortController();
+      const abortRequest = () => request.abort();
+      controller.signal.addEventListener('abort', abortRequest, { once: true });
+      const timeout = setTimeout(abortRequest, 15000);
+      try {
+        const repos = [];
+        for (let page = 1; ; page++) {
+          const response = await fetch(`https://api.github.com/users/${githubUser}/repos?type=owner&sort=updated&per_page=100&page=${page}`, { signal: request.signal });
+          if (!response.ok) throw new Error(`GitHub ${response.status}`);
+          const batch = await response.json();
+          if (!Array.isArray(batch)) throw new Error('Invalid repository response');
+          repos.push(...batch);
+          if (batch.length < 100) break;
+        }
+        if (controller.signal.aborted) return;
+        render(repos);
+        status.hidden = repos.length > 0;
+        status.textContent = 'No public repositories yet.';
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        status.hidden = false;
+        status.textContent = list.childElementCount
+          ? 'Couldn’t refresh repositories. Try again shortly.'
+          : 'Couldn’t load repositories. Try again shortly.';
+        retry.hidden = false;
+      } finally {
+        clearTimeout(timeout);
+        controller.signal.removeEventListener('abort', abortRequest);
+        if (!controller.signal.aborted) list.setAttribute('aria-busy', 'false');
+      }
+    };
+    retry.addEventListener('click', loadRepos, { signal: controller.signal });
+    document.getElementById('content')?.addEventListener('pageleave', () => controller.abort(), { once: true });
+    render(savedRepos);
+    loadRepos();
+  })();
+</script>

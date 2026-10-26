@@ -48,7 +48,8 @@
     <!-- Preferred URL for search engines -->
     <link rel="canonical" href="https://wafiqhsn.github.io/" />
 
-    <link rel="preload" href="Fonts/InstrumentSerif-Regular.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="Fonts/ArialNarrow-Regular.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="Fonts/ArialNarrow-Bold.ttf" as="font" type="font/ttf" crossorigin />
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -58,7 +59,7 @@
         theme: {
           extend: {
             fontFamily: {
-              sans: ["Helvetica", "Arial", "sans-serif"],
+              sans: ["Arial", "sans-serif"],
             },
           },
         },
@@ -72,17 +73,11 @@
       data-website-id="64492d38-7c41-44dc-9e79-0e0851238919"
     ></script>
 
-    <style>
-      @font-face {
-        font-family: "Instrument Serif";
-        src: url("Fonts/InstrumentSerif-Regular.ttf") format("truetype");
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-      }
-
+    <link rel="stylesheet" href="Fonts/arial-narrow.css" />
+<style>
+      *, *::before, *::after { font-family: Arial, sans-serif !important; }
       body {
-        font-family: Helvetica, Arial, sans-serif;
+        font-family: Arial, sans-serif;
       }
 
       /* Legacy base styles; page utilities override some rules. */
@@ -92,41 +87,79 @@
         box-sizing: border-box;
       }
 
-      /* NAVIGATION: spacing, position, font size, and active tab color. */
+      /* Keep vertical reading and pinch zoom native; handle horizontal page swipes in JavaScript. */
+      #content { touch-action: pan-y pinch-zoom; }
+
+      /* NAVIGATION: compact capsule with one sliding white active pill. */
       #navbar {
         position: fixed;
-        top: 20px;
+        top: 17px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 9999;
       }
       #navbar nav {
+        --nav-padding: 3px;
+        --active-tab: 0;
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        width: 230px;
+        height: 30px;
+        padding: var(--nav-padding);
+        border: 1.5px solid #e2e4e5;
+        border-radius: 999px;
+        background: #d9dcde;
+      }
+      #navbar nav::before {
+        content: "";
+        position: absolute;
+        top: var(--nav-padding);
+        bottom: var(--nav-padding);
+        left: var(--nav-padding);
+        width: calc((100% - 2 * var(--nav-padding)) / 4);
+        border-radius: 999px;
+        background: #fff;
+        transform: translateX(calc(var(--active-tab) * 100%));
+        transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+        pointer-events: none;
+        z-index: 0;
+      }
+      #navbar .nav-link {
+        position: relative;
+        z-index: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 20px;
-        background: transparent;
-      }
-      #navbar .nav-link {
-        font-family: "Instrument Serif", Georgia, serif;
-        font-size: 24px;
+        min-width: 0;
+        border-radius: 999px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
         font-weight: 400;
         font-style: normal;
-        line-height: 1.15;
+        line-height: 1;
         text-decoration: none;
-        color: #ccc;
-        transition: none;
+        color: #000;
+        background: transparent;
+        -webkit-tap-highlight-color: transparent;
       }
-      #navbar .nav-link[aria-current="page"] { color: #000; }
-      #navbar .nav-link:hover { color: #000; }
       #navbar .nav-link:focus-visible {
-        outline: 1px solid currentColor;
-        outline-offset: 5px;
+        outline: 1px solid #333;
+        outline-offset: 1px;
       }
       @media (max-width: 767px) {
         #navbar { top: 16px; }
-        #navbar nav { gap: 16px; }
-        #navbar .nav-link { font-size: 22px; }
+        #navbar nav {
+          --nav-padding: 2px;
+          width: 182px;
+          height: 24px;
+          border-width: 1px;
+        }
+        #navbar .nav-link { font-size: 12px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #navbar nav::before { transition: none; }
       }
 
       .page {
@@ -147,13 +180,17 @@
       }
       .header-logo {
         left: 20px;
-        width: 44px;
+        width: 96px;
         height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
       }
-      .header-logo img { display: block; width: 32px; height: auto; }
+      .header-logo img { display: block; width: 96px; height: auto; opacity: 0.2; transition: opacity 220ms ease; }
+      .header-logo:hover img, .header-logo:focus-visible img { opacity: 1; }
+      @media (prefers-reduced-motion: reduce) {
+        .header-logo img { transition: none; }
+      }
       .header-more { right: 20px; }
       .header-more-button {
         display: flex;
@@ -185,7 +222,7 @@
         padding: 11px 12px;
         border-radius: 5px;
         color: #111;
-        font: 14px/1.3 Helvetica, Arial, sans-serif;
+        font: 14px/1.3 Arial, sans-serif;
         text-decoration: none;
         white-space: nowrap;
       }
@@ -194,11 +231,11 @@
       .header-downloads a:focus-visible { outline: 2px solid #777; outline-offset: 2px; }
       @media (max-width: 767px) {
         .header-logo, .header-more { top: 5px; }
-        .header-logo { left: 8px; }
+        .header-logo { display: none; }
         .header-more { right: 8px; }
-        .header-logo img { width: 28px; }
+        .header-logo img { width: 100%; }
       }
-      /* COPYRIGHT: stays at the bottom on every page, outside page animations. */
+      /* COPYRIGHT: visible on Home and About, outside page animations. */
       .site-copyright {
         position: fixed;
         bottom: 18px;
@@ -207,13 +244,32 @@
         margin: 0;
         z-index: 9000;
         color: #8a8a8a;
-        font: 14px/1.4 Helvetica, Arial, sans-serif;
+        font: 14px/1.4 Arial, sans-serif;
         text-align: center;
         pointer-events: none;
         animation: none;
         transition: none;
       }
-      /* HELLO LOADER: stays visible until the drawing and first-page images finish. */
+      .site-copyright[hidden] { display: none; }
+      .footer-logo { display: none; }
+      @media (max-width: 767px) {
+        .site-copyright {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+          font-size: 12px;
+        }
+        .footer-logo { display: flex; align-items: center; flex: 0 0 auto; pointer-events: auto; }
+        .footer-logo img { display: block; width: 48px; height: auto; opacity: 0.2; transition: opacity 220ms ease; }
+        .footer-logo:hover img, .footer-logo:focus-visible img { opacity: 1; }
+        .footer-logo:focus-visible { outline: 1px solid #777; outline-offset: 4px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .footer-logo img { transition: none; }
+      }
+      /* PIKO LOADER: loop only while the first page is loading. */
       body.site-loading { overflow: hidden; }
       body.site-loading > #navbar,
       body.site-loading > .header-logo,
@@ -230,37 +286,26 @@
         justify-content: center;
         background: #fff;
       }
-      /* HELLO SIZE: adjust desktop and mobile widths separately. */
-      .hello-loader svg {
-        width: 180px;
+      /* LOADER SIZE: adjust desktop and mobile widths separately. */
+      .hello-loader-image {
+        width: 120px;
         max-width: 80vw;
         height: auto;
-        overflow: visible;
+        display: block;
       }
       @media (max-width: 767px) {
-        .hello-loader svg { width: 100px; }
+        .hello-loader-image { width: 66.6667px; }
       }
-      .hello-loader path {
-        fill: none;
-        stroke: #000;
-        stroke-width: 15;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-dasharray: 1;
-        stroke-dashoffset: 1;
-      }
-      .hello-error { text-align: center; font: 14px/1.5 Helvetica, Arial, sans-serif; }
+      .hello-error { text-align: center; font: 14px/1.5 Arial, sans-serif; }
       .hello-error[hidden] { display: none; }
       .hello-error button { margin-top: 10px; padding: 8px 16px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; }
     </style>
   </head>
 
   <body class="bg-white text-black site-loading">
-    <!-- HELLO ARTWORK: path copied from Images/hello.svg for the drawing animation. -->
+    <!-- PIKO ARTWORK: animated SVG in #D9DCDF. -->
     <div id="helloLoader" class="hello-loader" role="status" aria-label="Loading portfolio">
-      <svg viewBox="0 0 727.38 238.56" aria-hidden="true">
-        <path id="helloPath" pathLength="1" d="M7.5,217.9c43.88-23.18,73.1-50.2,90.53-68.92,20.08-21.56,47.86-52.17,52.39-94.53.88-8.23,4.01-37.51-9.81-45.11-5.75-3.16-12.41-1.46-14.41-.84-20.48,6.29-26.53,44.18-35.45,104.71-7.1,48.21-12.58,87.39-16.15,113.41.48-7.09,4.72-62.04,32.44-87.9,6.69-6.24,19.35-18.06,35.34-16.67,1.65.14,6,.52,9.39,2.36,21.86,11.86-9.64,77.38,11.21,96.87,24.67,23.06,121.25-19.51,125.69-64.55.25-2.58,2.71-27.47-11.33-36.64-5.03-3.28-10.29-3.33-11.66-3.3-18.18.35-37.7,26.3-38.57,49.78-.96,26.01,20.83,52.88,45.3,60.1,52.02,15.35,123.02-56.09,145.3-124.23,8.78-26.85,18.4-78.86-.37-89.83-4.95-2.89-10.37-2.06-12.51-1.73-28.64,4.4-44.6,59.83-49.44,91.76-6.19,40.85-4.47,111.1,30.06,125.23,2.1.86,8.29,3.14,20.62,1.84,73.84-7.75,115.92-117.17,118.84-125.04,3.57-9.61,27.23-73.34,6.37-88.56-5.98-4.36-13.55-3.23-14.94-3.02-27.88,4.2-42.1,60.52-46.14,90.68-5.1,38.08-4,109.34,32.1,124.43,10.16,4.25,19.84,2.69,24.42,1.89,41.89-7.27,57.34-62.9,57.99-65.38.54-1.87,11.34-37.44,41.31-43.39,3.64-.72,13.44-2.53,23.39,2.19,20.64,9.78,27.38,40.76,21.26,63.68-5.05,18.92-20.37,37.97-41.35,42.49-4.28.92-13.29,2.86-22.63-1.18-20.57-8.89-27.9-40.37-21.97-63.79,5.1-20.14,21.59-40.5,41.31-43.39,10.17-1.49,21.4,1.63,23.39,2.19,13.31,3.7,14.25,8.59,25.02,10.42,14.59,2.49,26.7-4.13,29.92-6.03,8.4-4.96,13.23-11.44,15.56-15.07" />
-      </svg>
+      <img id="loadingArtwork" class="hello-loader-image" src="Images/PikoSquareLoop.svg" alt="" width="532" height="532" fetchpriority="high" />
       <div id="helloError" class="hello-error" hidden>
         <p>Couldn’t load the page. Please try again.</p>
         <button type="button" id="helloRetry">Try again</button>
@@ -282,11 +327,12 @@
         <a href="https://drive.google.com/file/d/1llZMCI6Dl_-RVUQu9ySJ4RSdKSjKFMhu/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Download Portfolio</a>
       </div>
     </div>
-    <!-- NAVIGATION LINKS: Home, Work, and About. -->
+    <!-- NAVIGATION LINKS: Home, Work, Labs, and About. -->
     <div id="navbar">
       <nav aria-label="Main navigation">
         <a href="#" data-page="home.html" class="nav-link" aria-current="page">Home</a>
         <a href="#" data-page="work.html" class="nav-link">Work</a>
+        <a href="#" data-page="labs.html" class="nav-link">Labs</a>
         <a href="#" data-page="about.html" class="nav-link">About</a>
       </nav>
     </div>
@@ -294,38 +340,27 @@
     <!-- Active page content -->
 
     <main id="content" class="min-h-screen"></main>
-    <footer class="site-copyright">©2026 Wafiq Hasan</footer>
+    <footer class="site-copyright">
+      <a class="footer-logo" id="mobileHomeLogo" href="#" aria-label="Go to Home"><img src="Images/Logo.svg" alt="" width="150" height="30" /></a>
+      <span>©2026 Wafiq Hasan</span>
+    </footer>
 
     <script>
       const content = document.getElementById("content");
 
       const navLinks = document.querySelectorAll(".nav-link");
 
-      // HELLO DRAWING: plays once per site opening; normal tab changes skip it.
+      // PIKO LOOP: show for at least one second; keep looping while Home loads.
       const helloLoader = document.getElementById('helloLoader');
-      const helloPath = document.getElementById('helloPath');
+      const loadingArtwork = document.getElementById('loadingArtwork');
+      const loaderMinimumReady = new Promise((resolve) => setTimeout(resolve, 1000));
       let firstPagePending = true;
       content.inert = true;
-      const helloFinished = (() => {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          helloPath.style.strokeDashoffset = '0';
-          return Promise.resolve();
-        }
-        const drawing = helloPath.animate([
-          { strokeDashoffset: '1' }, { strokeDashoffset: '0' },
-        ], { duration: 1500, easing: 'ease-in-out', fill: 'forwards' });
-        return drawing.finished.then(() => {
-          helloPath.style.strokeDashoffset = '0';
-          drawing.cancel();
-          // Hold the completed Hello for 500 ms before revealing Home.
-          return new Promise((resolve) => setTimeout(resolve, 100));
-        });
-      })();
 
-      // FIRST LOAD: no short image timeout; keep Hello until images are decoded.
+      // FIRST LOAD: reveal Home when ready and the one-second minimum has elapsed.
       async function finishFirstLoad() {
         const imageReady = Array.from(document.images).map(async (img) => {
-          if (!img.getAttribute('src')) return;
+          if (img === loadingArtwork || !img.getAttribute('src')) return;
           if (!img.complete) await new Promise((resolve) => {
             const finish = () => {
               img.removeEventListener('load', finish);
@@ -338,14 +373,7 @@
           });
           if (img.decode && img.naturalWidth) await img.decode().catch(() => {});
         });
-        await Promise.all([helloFinished, ...imageReady, document.fonts.ready]);
-        // HELLO EXIT: softly fade the lettering before revealing Home.
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          await helloLoader.querySelector('svg').animate(
-            [{ opacity: 1 }, { opacity: 0 }],
-            { duration: 600, easing: 'ease-in-out', fill: 'forwards' }
-          ).finished;
-        }
+        await Promise.all([loaderMinimumReady, ...imageReady, document.fonts.ready]);
         firstPagePending = false;
         content.inert = false;
         document.body.classList.remove('site-loading');
@@ -367,7 +395,7 @@
       }
 
       // PAGE ORDER: controls the order used by scrolling and swiping.
-      const tabOrder = ["home.html", "work.html", "about.html"];
+      const tabOrder = ["home.html", "work.html", "labs.html", "about.html"];
       const desktopScroll = window.matchMedia(
         "(min-width: 1024px) and (hover: hover) and (pointer: fine)",
       );
@@ -410,13 +438,13 @@
         });
       }
 
-      // Move content up when advancing and down when returning.
-      async function animatePage(entering, direction) {
-        if (reducedMotion.matches || (entering && currentPage === "home.html")) return;
+      // Every page moves upward on entry and exit, regardless of navigation direction.
+      async function animatePage(entering) {
+        if (reducedMotion.matches) return;
         const distance = desktopScroll.matches ? 72 : 28;
         const hidden = {
           opacity: 0,
-          transform: `translateY(${(entering ? direction : -direction) * distance}px)`,
+          transform: `translateY(${(entering ? 1 : -1) * distance}px)`,
         };
         const visible = { opacity: 1, transform: "translateY(0)" };
         const animation = content.animate(entering ? [hidden, visible] : [visible, hidden], {
@@ -434,6 +462,8 @@
 
       // ACTIVE TAB: update immediately, even while the next page is loading.
       function updateActiveTab(page) {
+        document.querySelector(".site-copyright").hidden = !["home.html", "about.html"].includes(page);
+        document.querySelector("#navbar nav").style.setProperty("--active-tab", Math.max(0, tabOrder.indexOf(page)));
         navLinks.forEach((link) => {
           if (link.dataset.page === page) link.setAttribute("aria-current", "page");
           else link.removeAttribute("aria-current");
@@ -451,21 +481,19 @@
         if (page === currentPage) return;
         changingPage = true;
         destinationPage = page;
-        // Count the 800ms wheel delay from the start, not the end.
+        // Count the horizontal gesture cooldown from the start of navigation.
         wheelBlockedUntil = performance.now() + 800;
         content.setAttribute("aria-busy", "true");
         content.style.pointerEvents = "none";
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 10000);
-        const direction =
-          currentPage && tabOrder.indexOf(page) < tabOrder.indexOf(currentPage) ? -1 : 1;
         try {
           // Keep the existing page visible if fetching fails.
-          const response = await fetch(page, { signal: controller.signal });
+          const response = await fetch(page, { signal: controller.signal, cache: "no-cache" });
           if (!response.ok) throw new Error(`Unable to load ${page}: ${response.status}`);
           const html = await response.text();
           clearTimeout(timeout);
-          if (currentPage) await animatePage(false, direction);
+          if (currentPage) await animatePage(false);
           content.style.opacity = "0";
           content.dispatchEvent(new Event("pageleave"));
           content.innerHTML = html;
@@ -478,7 +506,7 @@
           await settlePageLayout();
           content.style.opacity = "1";
           content.dispatchEvent(new Event("pagereveal"));
-          await animatePage(true, direction);
+          await animatePage(true);
         } catch (error) {
           console.error("Page navigation failed:", error);
           if (firstPagePending) {
@@ -521,10 +549,12 @@
         moreButton.setAttribute('aria-expanded', String(open));
       };
       moreButton.addEventListener('click', () => setDownloadsOpen(downloads.hidden));
-      document.getElementById('homeLogo').addEventListener('click', (event) => {
-        event.preventDefault();
-        setDownloadsOpen(false);
-        loadPage('home.html');
+      document.querySelectorAll('#homeLogo, #mobileHomeLogo').forEach((logo) => {
+        logo.addEventListener('click', (event) => {
+          event.preventDefault();
+          setDownloadsOpen(false);
+          loadPage('home.html');
+        });
       });
       document.addEventListener('pointerdown', (event) => {
         if (!headerMore.contains(event.target)) setDownloadsOpen(false);
@@ -545,103 +575,66 @@
         }
       });
 
-      // Preserve scrolling inside nested panels and form controls.
+      // Preserve horizontal scrolling inside nested panels and leave form controls alone.
       function canScrollInside(target, direction) {
         if (!(target instanceof Element)) return false;
         if (target.closest("input, textarea, select, [contenteditable]")) return true;
         for (let node = target; node && node !== document.body; node = node.parentElement) {
-          if (!/(auto|scroll)/.test(getComputedStyle(node).overflowY)) continue;
-          if (direction > 0 && node.scrollTop + node.clientHeight < node.scrollHeight - 2)
+          if (!/(auto|scroll)/.test(getComputedStyle(node).overflowX)) continue;
+          if (direction > 0 && node.scrollLeft + node.clientWidth < node.scrollWidth - 2)
             return true;
-          if (direction < 0 && node.scrollTop > 2) return true;
+          if (direction < 0 && node.scrollLeft > 2) return true;
         }
         return false;
       }
 
-      // Continuous desktop wheel navigation, with an 800ms cooldown at page edges.
-      document.addEventListener(
-        "wheel",
-        (event) => {
-          if (
-            !desktopScroll.matches ||
-            event.ctrlKey ||
-            event.metaKey ||
-            !event.deltaY ||
-            Math.abs(event.deltaX) > Math.abs(event.deltaY)
-          )
-            return;
-          const direction = Math.sign(event.deltaY);
-          if (canScrollInside(event.target, direction)) return;
-          const now = performance.now();
-          const newGesture = now - lastWheelTime > 220;
-          lastWheelTime = now;
-          if (newGesture) {
-            wheelTotal = 0;
-          }
-          const scroller = document.scrollingElement;
-          const atEdge =
-            direction > 0
-              ? scroller.scrollTop + window.innerHeight >= scroller.scrollHeight - 3
-              : scroller.scrollTop <= 3;
-          if (!atEdge && !changingPage) {
-            wheelTotal = 0;
-            return;
-          }
-          const nextIndex = tabOrder.indexOf(destinationPage || currentPage) + direction;
-          if (!currentPage || nextIndex < 0 || nextIndex >= tabOrder.length) return;
-          event.preventDefault();
-          if (now < wheelBlockedUntil) return;
-          const delta =
-            event.deltaY *
-            (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1);
-          if (Math.sign(wheelTotal) !== direction) wheelTotal = 0;
-          wheelTotal += delta;
-          if (Math.abs(wheelTotal) < 60) return;
-          wheelTotal = 0;
-          wheelBlockedUntil = now + 800;
-          loadPage(tabOrder[nextIndex]);
-        },
-        { passive: false },
-      );
+      // Horizontal trackpad navigation; vertical wheel scrolling stays within the page.
+      document.addEventListener("wheel", (event) => {
+        const horizontal = event.deltaX || (event.shiftKey ? event.deltaY : 0);
+        if (!desktopScroll.matches || event.ctrlKey || event.metaKey || !horizontal) return;
+        if (!event.shiftKey && Math.abs(horizontal) <= Math.abs(event.deltaY)) return;
+        const direction = Math.sign(horizontal);
+        if (canScrollInside(event.target, direction)) return;
+        const now = performance.now();
+        if (now - lastWheelTime > 220) wheelTotal = 0;
+        lastWheelTime = now;
+        const nextIndex = tabOrder.indexOf(destinationPage || currentPage) + direction;
+        if (!currentPage || nextIndex < 0 || nextIndex >= tabOrder.length) return;
+        event.preventDefault();
+        if (now < wheelBlockedUntil) return;
+        const delta = horizontal * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerWidth : 1);
+        if (Math.sign(wheelTotal) !== direction) wheelTotal = 0;
+        wheelTotal += delta;
+        if (Math.abs(wheelTotal) < 60) return;
+        wheelTotal = 0;
+        wheelBlockedUntil = now + 800;
+        loadPage(tabOrder[nextIndex]);
+      }, { passive: false });
 
-      // Vertical touch navigation: swipe up for next, down for previous.
-      // Start at a page edge so long pages keep their normal reading scroll.
+      // Touch navigation: swipe left for the next page, right for the previous page.
       let touchGesture = null;
       document.addEventListener("touchstart", (event) => {
         touchGesture = null;
         if (event.touches.length !== 1 || !currentPage) return;
         const touch = event.touches[0];
-        const scroller = document.scrollingElement;
-        touchGesture = {
-          x: touch.clientX,
-          y: touch.clientY,
-          target: event.target,
-          atTop: scroller.scrollTop <= 3,
-          atBottom: scroller.scrollTop + window.innerHeight >= scroller.scrollHeight - 3,
-          direction: 0,
-          distance: 0,
-        };
+        touchGesture = { x: touch.clientX, y: touch.clientY, target: event.target, direction: 0, distance: 0 };
       }, { passive: true });
-
       document.addEventListener("touchmove", (event) => {
         if (!touchGesture) return;
         if (event.touches.length !== 1) { touchGesture = null; return; }
-        const dx = event.touches[0].clientX - touchGesture.x;
-        const dy = touchGesture.y - event.touches[0].clientY;
+        const dx = touchGesture.x - event.touches[0].clientX;
+        const dy = event.touches[0].clientY - touchGesture.y;
         touchGesture.direction = 0;
         touchGesture.distance = 0;
-        if (Math.abs(dy) <= Math.abs(dx) || Math.abs(dy) < 10) return;
-        const direction = Math.sign(dy);
+        if (Math.abs(dx) <= Math.abs(dy) || Math.abs(dx) < 10) return;
+        const direction = Math.sign(dx);
         if (canScrollInside(touchGesture.target, direction)) return;
-        if (direction > 0 ? !touchGesture.atBottom : !touchGesture.atTop) return;
         const index = tabOrder.indexOf(destinationPage || currentPage) + direction;
         if (index < 0 || index >= tabOrder.length) return;
-        // Prevent overscroll only when this gesture can navigate to another page.
         if (event.cancelable) event.preventDefault();
         touchGesture.direction = direction;
-        touchGesture.distance = Math.abs(dy);
+        touchGesture.distance = Math.abs(dx);
       }, { passive: false });
-
       document.addEventListener("touchend", () => {
         const gesture = touchGesture;
         touchGesture = null;

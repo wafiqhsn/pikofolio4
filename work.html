@@ -1,7 +1,8 @@
 <style>
-  /* PROJECT TITLES: Instrument Serif font and desktop text size. */
+      *, *::before, *::after { font-family: Arial, sans-serif !important; }
+  /* PROJECT TITLES: Arial font and desktop text size. */
   #work .project-title {
-    font-family: "Instrument Serif", Georgia, serif;
+    font-family: Arial, sans-serif;
     font-size: 22px;
     font-weight: 400;
     line-height: 1.2;
@@ -10,6 +11,19 @@
   /* MOBILE TITLES: smaller text on narrow screens. */
   @media (max-width: 767px) {
     #work .project-title { font-size: 18px; }
+  }
+  /* DESKTOP: center the complete project grid vertically in the viewport. */
+  @media (min-width: 1024px) {
+    #work {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+    #work #project-grid { width: 100%; }
   }
 </style>
 <!-- PROJECT GRID: page spacing and responsive column layout. -->

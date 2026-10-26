@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About — Wafiq Hasan</title>
-    <style>
+    <link rel="stylesheet" href="Fonts/arial-narrow.css" />
+<style>
+      *, *::before, *::after { font-family: Arial, sans-serif !important; }
       .about-page, .about-page * { box-sizing: border-box; }
       /* PAGE LAYOUT: center the content and leave space for the header and footer. */
       .about-page {
@@ -20,10 +22,10 @@
       }
       /* CONTENT WIDTH: limits how wide the paragraph can become. */
       .about-content { width: 100%; max-width: 840px; text-align: center; }
-      /* ABOUT TEXT: Times New Roman, font size, and line spacing. */
+      /* ABOUT TEXT: Arial Narrow, font size, and line spacing. */
       .about-copy {
         margin: 0;
-        font-family: "Times New Roman", Times, serif;
+        font-family: "Arial Narrow", Arial, sans-serif !important;
         font-size: 32px;
         font-weight: 400;
         line-height: 1.5;
@@ -45,7 +47,7 @@
         border-radius: 7px;
         background: #eceef1;
         color: #111;
-        font: 16px/1.2 Helvetica, Arial, sans-serif;
+        font: 16px/1.2 Arial, sans-serif;
         text-decoration: none;
       }
       .about-download--portfolio { background: #000; color: #fff; }
@@ -58,13 +60,14 @@
         .about-downloads { gap: 10px; margin-top: 24px; }
         .about-download { font-size: 14px; }
       }
+      .about-copy, .about-copy * { font-family: "Arial Narrow", Arial, sans-serif !important; }
     </style>
   </head>
   <body style="margin: 0">
     <section id="about" class="about-page" aria-label="About Wafiq">
       <div class="about-content">
         <!-- ABOUT BIO: edit the paragraph here; em tags make words italic. -->
-        <p class="about-copy">Piko is a creative designer based in Jakarta 🌲, working across <em>graphic design, motion,</em> and <em>digital experiences</em> 🖥️. His practice draws on a curiosity for art, architecture, fashion, music and culture 🎨. From a visual identity to an image in motion or an interface, he explores how ideas can take shape, move and connect with people 🤍. At the heart of it all is a simple belief: <em>form follows function and a little bit of fun</em> ✏️</p>
+        <p class="about-copy">Piko is a creative designer based in Jakarta 🌲, working across <em>graphic design, motion,</em> and <em>digital experiences</em> 🖥️. His practice draws on a curiosity for art, architecture, fashion, music and culture 🎨. From a visual identity to an image in motion or an interface, he explores how ideas can take shape, move and connect with people 🤍. At the heart of it all is a simple belief: <em>form follows function and fun</em> ✏️</p>
         <!-- DOWNLOAD LINKS: update the resume and portfolio URLs here. -->
         <div class="about-downloads">
           <a class="about-download" href="https://drive.google.com/file/d/1ptUa8NC2_C57vPdolugWmaEgKEF1b3-g/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Download Resume</a>
