@@ -52,6 +52,8 @@
         letter-spacing: 0;
       }
 
+      .home-intro-break { display: none; }
+
       /* DESKTOP IMAGE SIZE: scales the whole scene with a maximum width. */
       .home-scene {
         position: relative;
@@ -251,6 +253,7 @@
 
       /* Tablet: keep the full composition large without unlimited growth. */
       @media (min-width: 768px) and (max-width: 1199px) {
+        .home-intro-break-tablet { display: initial; }
         .home-scene { width: min(92vw, 760px); }
       }
 
@@ -267,7 +270,7 @@
           font-size: 24px;
           line-height: 1.5;
         }
-        .home-intro-line { display: block; }
+        .home-intro-break-mobile { display: initial; }
         .home-scene {
           width: min(100%, 480px);
           aspect-ratio: 910 / 700;
@@ -315,7 +318,7 @@
     <section class="home-viewport" aria-label="Introduction">
       <div class="home-hero">
         <!-- INTRO TEXT: edit the main sentence here. -->
-        <h1 class="home-intro"><span class="home-intro-line">Hi! I’m Piko 👋🏻 a multidisciplinary</span> <span class="home-intro-line">designer 🖥️ based in Jakarta. 🌲</span> <span class="home-intro-line">I believe in form follows function</span> <span class="home-intro-line">and fun . ✏️</span></h1>
+        <h1 class="home-intro">Hi! I’m Piko 👋🏻 a multidisciplinary <br class="home-intro-break home-intro-break-mobile">designer 🖥️ <br class="home-intro-break home-intro-break-tablet">based in Jakarta. 🌲 <br class="home-intro-break home-intro-break-mobile">I believe in form follows <br class="home-intro-break home-intro-break-tablet">function <br class="home-intro-break home-intro-break-mobile">and fun . ✏️</h1>
         <!-- HERO ASSETS: image files, desktop positions, and layer order. -->
         <!-- LAYERS: shadow 0, desk 1, person 2, other objects above. -->
         <!-- LABEL POSITIONS: label-x centers on the full image box, including transparency. -->
