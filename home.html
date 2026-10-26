@@ -263,10 +263,11 @@
         .home-hero { gap: 16vw; }
         .home-intro {
           width: auto;
-          max-width: min(calc(100% - 48px), 360px);
+          max-width: min(calc(100% - 32px), 380px);
           font-size: 24px;
           line-height: 1.5;
         }
+        .home-intro-line { display: block; }
         .home-scene {
           width: min(100%, 480px);
           aspect-ratio: 910 / 700;
@@ -314,7 +315,7 @@
     <section class="home-viewport" aria-label="Introduction">
       <div class="home-hero">
         <!-- INTRO TEXT: edit the main sentence here. -->
-        <h1 class="home-intro">Hi! I’m Piko 👋🏻 a multidisciplinary designer 🖥️ based in Jakarta 🌲 I believe in form follows function and fun ✏️</h1>
+        <h1 class="home-intro"><span class="home-intro-line">Hi! I’m Piko 👋🏻 a multidisciplinary</span> <span class="home-intro-line">designer 🖥️ based in Jakarta. 🌲</span> <span class="home-intro-line">I believe in form follows function</span> <span class="home-intro-line">and fun . ✏️</span></h1>
         <!-- HERO ASSETS: image files, desktop positions, and layer order. -->
         <!-- LAYERS: shadow 0, desk 1, person 2, other objects above. -->
         <!-- LABEL POSITIONS: label-x centers on the full image box, including transparency. -->
